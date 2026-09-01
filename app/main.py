@@ -1,5 +1,14 @@
 from fastapi import FastAPI
+
 from app.api.routes import router
+from app.api.investigation_routes import router as investigation_router
+from app.api.decision_routes import router as decision_router
+
+from app.database.database import Base, engine
+
+
+Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="AI Finance Controller",
@@ -24,3 +33,5 @@ def health_check():
 
 
 app.include_router(router)
+app.include_router(investigation_router)
+app.include_router(decision_router)

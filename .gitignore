@@ -14,3 +14,6 @@ __pycache__/
 # Operating system
 .DS_Store
 Thumbs.db
+
+# Local database
+finance_controller.db
