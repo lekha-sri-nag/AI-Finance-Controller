@@ -1,0 +1,2 @@
+policy_id,policy_name,category,threshold_amount,approval_required,description,active
+POL-001,Standard Invoice Approval,General,20000,true,Invoices above the threshold require approval,true

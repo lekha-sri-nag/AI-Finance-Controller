@@ -1,0 +1,3 @@
+vendor_id,vendor_name,tax_id,category,risk_level,active
+V-001,ABC Supplies,TAX001,Office Supplies,Low,true
+V-002,XYZ Traders,TAX002,Equipment,High,true

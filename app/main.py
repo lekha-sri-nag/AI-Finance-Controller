@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from app.api.routes import router
 from app.api.investigation_routes import router as investigation_router
 from app.api.decision_routes import router as decision_router
+from app.api.ingestion_routes import router as ingestion_router
+from app.api.dynamic_processing_routes import router as dynamic_processing_router
 
 from app.database.database import Base, engine
 
@@ -35,3 +37,5 @@ def health_check():
 app.include_router(router)
 app.include_router(investigation_router)
 app.include_router(decision_router)
+app.include_router(ingestion_router)
+app.include_router(dynamic_processing_router)

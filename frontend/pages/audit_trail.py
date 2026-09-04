@@ -19,7 +19,7 @@ st.write(
 
 invoice_id = st.text_input(
     "Enter Invoice ID",
-    value="INV-013"
+    value="INV-TEST-001"
 )
 
 if st.button("View Audit Trail"):

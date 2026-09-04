@@ -1,0 +1,3 @@
+receipt_id,purchase_order_id,receipt_date,quantity_received,received_amount,status
+REC-001,PO-001,2026-08-28,90,18000,Received
+REC-002,PO-002,2026-08-28,120,40000,Received

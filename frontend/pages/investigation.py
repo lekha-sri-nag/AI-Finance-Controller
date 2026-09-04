@@ -17,7 +17,10 @@ st.write(
 
 invoice_id = st.text_input(
     "Enter Invoice ID",
-    value="INV-013"
+    value=st.session_state.get(
+        "selected_invoice_id",
+        "INV-TEST-001"
+    )
 )
 
 if st.button("Investigate Invoice"):

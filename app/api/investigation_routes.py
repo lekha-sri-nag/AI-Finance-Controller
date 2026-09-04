@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from fastapi import APIRouter, HTTPException
 
-from models.exception import ExceptionRecord
+from app.controller import process_invoice
+from app.ingestion.entity_loader import load_entity
 from app.investigation.investigator import investigate_invoice
 from app.evidence.evidence_builder import build_evidence
 from app.evidence.evidence_chain import build_evidence_chain
@@ -11,297 +14,198 @@ router = APIRouter(
     tags=["investigation"]
 )
 
+RAW_DATA_DIR = Path("data/raw")
+UPLOAD_DIR = Path("data/uploads")
+
 
 @router.get("/{invoice_id}/investigation")
 def get_invoice_investigation(invoice_id: str):
-    """
-    Return detailed investigation results for an invoice.
-    """
+    invoice_file = RAW_DATA_DIR / "invoices.csv"
 
-    # ---------------------------------------------------------
-    # 1. Temporary test invoice
-    # ---------------------------------------------------------
-    if invoice_id != "INV-013":
+    uploaded_files = sorted(
+        UPLOAD_DIR.glob("*"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True
+    )
+
+    for file_path in uploaded_files:
+        if file_path.suffix.lower() not in {".csv", ".xlsx"}:
+            continue
+        try:
+            test_invoices = load_entity(str(file_path), "invoice")
+            if any(
+                item.invoice_id == invoice_id
+                for item in test_invoices
+            ):
+                invoice_file = file_path
+                break
+        except Exception:
+            continue
+
+    try:
+        invoices = load_entity(
+            str(invoice_file), "invoice"
+        )
+        purchase_orders = load_entity(
+            str(RAW_DATA_DIR / "purchase_orders.csv"),
+            "purchase_order"
+        )
+        receipts = load_entity(
+            str(RAW_DATA_DIR / "receipts.csv"),
+            "receipt"
+        )
+        approvals = load_entity(
+            str(RAW_DATA_DIR / "approvals.csv"),
+            "approval"
+        )
+        policies = load_entity(
+            str(RAW_DATA_DIR / "policies.csv"),
+            "policy"
+        )
+        vendors = load_entity(
+            str(RAW_DATA_DIR / "vendors.csv"),
+            "vendor"
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc)
+        )
+
+    invoice = next(
+        (
+            item for item in invoices
+            if item.invoice_id == invoice_id
+        ),
+        None
+    )
+
+    if invoice is None:
         raise HTTPException(
             status_code=404,
             detail=f"Invoice {invoice_id} not found"
         )
 
-    invoice = {
-        "invoice_id": "INV-013",
-        "vendor_id": "V-002",
-        "purchase_order_id": "PO-013",
-        "invoice_date": "2026-08-27",
-        "amount": 75000,
-        "quantity": 100,
-        "currency": "INR",
-        "status": "Pending"
-    }
-
-    # ---------------------------------------------------------
-    # 2. Purchase Order
-    # ---------------------------------------------------------
-    purchase_order = {
-        "purchase_order_id": "PO-013",
-        "vendor_id": "V-002",
-        "order_date": "2026-08-20",
-        "total_amount": 50000,
-        "currency": "INR",
-        "status": "Approved"
-    }
-
-    # ---------------------------------------------------------
-    # 3. Goods Receipt
-    # ---------------------------------------------------------
-    receipt = {
-        "receipt_id": "REC-013",
-        "purchase_order_id": "PO-013",
-        "receipt_date": "2026-08-27",
-        "quantity_received": 80,
-        "received_amount": 40000,
-        "status": "Received"
-    }
-
-    # ---------------------------------------------------------
-    # 4. Vendor
-    # ---------------------------------------------------------
-    vendor = {
-        "vendor_id": "V-002",
-        "vendor_name": "XYZ Traders",
-        "tax_id": "GST67890",
-        "category": "Electronics",
-        "risk_level": "High",
-        "active": True
-    }
-
-    # ---------------------------------------------------------
-    # 5. Detected Exceptions
-    # ---------------------------------------------------------
-    exception_data = [
-        {
-            "exception_id": "EXC-AMOUNT-INV-013",
-            "invoice_id": "INV-013",
-            "exception_type": "Amount Mismatch",
-            "severity": "High",
-            "description": (
-                "Invoice amount is ₹75,000, "
-                "but purchase order amount is ₹50,000."
-            ),
-            "detected_at": "2026-08-27T10:00:00",
-            "status": "Open"
-        },
-        {
-            "exception_id": "EXC-APPROVAL-INV-013",
-            "invoice_id": "INV-013",
-            "exception_type": "Missing Approval",
-            "severity": "High",
-            "description": (
-                "Invoice INV-013 has no approval record."
-            ),
-            "detected_at": "2026-08-27T10:01:00",
-            "status": "Open"
-        },
-        {
-            "exception_id": "EXC-QUANTITY-INV-013",
-            "invoice_id": "INV-013",
-            "exception_type": "Quantity Mismatch",
-            "severity": "High",
-            "description": (
-                "Invoice quantity is 100, "
-                "but received quantity is 80."
-            ),
-            "detected_at": "2026-08-27T10:02:00",
-            "status": "Open"
-        },
-        {
-            "exception_id": "EXC-POLICY-INV-013",
-            "invoice_id": "INV-013",
-            "exception_type": "Policy Violation",
-            "severity": "High",
-            "description": (
-                "Invoice amount exceeds the policy threshold."
-            ),
-            "detected_at": "2026-08-27T10:03:00",
-            "status": "Open"
-        },
-        {
-            "exception_id": "EXC-VENDOR-INV-013",
-            "invoice_id": "INV-013",
-            "exception_type": "Vendor Anomaly",
-            "severity": "High",
-            "description": (
-                "Invoice is associated with a high-risk vendor."
-            ),
-            "detected_at": "2026-08-27T10:04:00",
-            "status": "Open"
-        }
-    ]
-
-    # ---------------------------------------------------------
-    # 6. Convert dictionaries into ExceptionRecord objects
-    # ---------------------------------------------------------
-    exceptions = [
-        ExceptionRecord(**exception)
-        for exception in exception_data
-    ]
-
-    # ---------------------------------------------------------
-    # 7. Risk Assessment
-    # ---------------------------------------------------------
-    risk_result = {
-        "invoice_id": "INV-013",
-        "risk_score": 100,
-        "risk_level": "Critical",
-        "risk_factors": [
-            "Amount Mismatch",
-            "Missing Approval",
-            "Quantity Mismatch",
-            "Policy Violation",
-            "Vendor Anomaly"
-        ],
-        "explanation": (
-            "Invoice has 5 detected exception(s) "
-            "with a combined risk score of 100."
-        )
-    }
-
-    # ---------------------------------------------------------
-    # 8. Payment Recommendation
-    # ---------------------------------------------------------
-    recommendation = {
-        "recommendation_id": "REC-INV-013",
-        "invoice_id": "INV-013",
-        "action": "Block Payment",
-        "priority": "Critical",
-        "reason": (
-            "Multiple financial control violations "
-            "were detected."
+    purchase_order = next(
+        (
+            item for item in purchase_orders
+            if item.purchase_order_id
+            == invoice.purchase_order_id
         ),
-        "requires_human_review": True
-    }
+        None
+    )
 
-    # ---------------------------------------------------------
-    # 9. Build Evidence
-    # ---------------------------------------------------------
+    if purchase_order is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"Purchase order "
+                f"{invoice.purchase_order_id} not found"
+            )
+        )
+
+    receipt = next(
+        (
+            item for item in receipts
+            if item.purchase_order_id
+            == invoice.purchase_order_id
+        ),
+        None
+    )
+
+    if receipt is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Receipt not found for purchase order: "
+                f"{invoice.purchase_order_id}"
+            )
+        )
+
+    vendor = next(
+        (
+            item for item in vendors
+            if item.vendor_id == invoice.vendor_id
+        ),
+        None
+    )
+
+    if vendor is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Vendor {invoice.vendor_id} not found"
+        )
+
+    policy = next(
+        (
+            item for item in policies
+            if item.active
+        ),
+        None
+    )
+
+    if policy is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No active financial policy found"
+        )
+
+    existing_invoices = [
+        item for item in invoices
+        if item.invoice_id != invoice.invoice_id
+    ]
+
+    result = process_invoice(
+        invoice=invoice,
+        purchase_order=purchase_order,
+        receipt=receipt,
+        approvals=approvals,
+        policy=policy,
+        vendor=vendor,
+        existing_invoices=existing_invoices
+    )
+
+    exceptions = result["exceptions"]
+    risk_result = result["risk_result"]
+    recommendation = result["recommendation"]
+
+    investigation = investigate_invoice(
+        invoice=invoice.model_dump(),
+        exceptions=exceptions,
+        risk_result=risk_result.__dict__,
+        recommendation=recommendation.__dict__
+    )
+
     evidence_list = []
 
     for exception in exceptions:
+        evidence = build_evidence(
+            exception=exception,
+            source_type="Financial Records",
+            source_reference=invoice.invoice_id,
+            description=exception.description,
+            confidence=1.0
+        )
+        evidence_list.append(evidence)
 
-        exception_type = exception.exception_type
-
-        if exception_type == "Amount Mismatch":
-
-            evidence_list.append(
-                build_evidence(
-                    exception=exception,
-                    source_type="Purchase Order",
-                    source_reference="PO-013",
-                    description=(
-                        "Invoice amount is ₹75,000, "
-                        "while the approved purchase order "
-                        "amount is ₹50,000."
-                    ),
-                    confidence=1.0
-                )
-            )
-
-        elif exception_type == "Missing Approval":
-
-            evidence_list.append(
-                build_evidence(
-                    exception=exception,
-                    source_type="Approval Records",
-                    source_reference="INV-013",
-                    description=(
-                        "No approval record was found "
-                        "for invoice INV-013."
-                    ),
-                    confidence=1.0
-                )
-            )
-
-        elif exception_type == "Quantity Mismatch":
-
-            evidence_list.append(
-                build_evidence(
-                    exception=exception,
-                    source_type="Goods Receipt",
-                    source_reference="REC-013",
-                    description=(
-                        "Invoice quantity is 100, "
-                        "while received quantity is 80."
-                    ),
-                    confidence=1.0
-                )
-            )
-
-        elif exception_type == "Policy Violation":
-
-            evidence_list.append(
-                build_evidence(
-                    exception=exception,
-                    source_type="Financial Policy",
-                    source_reference="POLICY-001",
-                    description=(
-                        "Invoice amount exceeds the applicable "
-                        "financial control threshold."
-                    ),
-                    confidence=0.95
-                )
-            )
-
-        elif exception_type == "Vendor Anomaly":
-
-            evidence_list.append(
-                build_evidence(
-                    exception=exception,
-                    source_type="Vendor Master",
-                    source_reference="V-002",
-                    description=(
-                        "Vendor XYZ Traders is classified "
-                        "as a high-risk vendor."
-                    ),
-                    confidence=0.95
-                )
-            )
-
-    # ---------------------------------------------------------
-    # 10. Build ordered evidence chain
-    # ---------------------------------------------------------
-    evidence = build_evidence_chain(evidence_list)
-
-    # ---------------------------------------------------------
-    # 11. Run Investigation Engine
-    # ---------------------------------------------------------
-    investigation = investigate_invoice(
-        invoice=invoice,
-        exceptions=exceptions,
-        risk_result=risk_result,
-        recommendation=recommendation
+    evidence_chain = build_evidence_chain(
+        evidence_list
     )
 
-    # ---------------------------------------------------------
-    # 12. Return Investigation Result
-    # ---------------------------------------------------------
     return {
-        "invoice": invoice,
-        "purchase_order": purchase_order,
-        "receipt": receipt,
-        "vendor": vendor,
-
+        "invoice": invoice.model_dump(mode="json"),
+        "purchase_order": purchase_order.model_dump(mode="json"),
+        "receipt": receipt.__dict__,
+        "vendor": vendor.__dict__,
         "exceptions": [
-            exception.model_dump()
+            exception.model_dump(mode="json")
             for exception in exceptions
         ],
-
-        "risk_result": risk_result,
-
-        "recommendation": recommendation,
-
+        "risk_result": risk_result.__dict__,
+        "recommendation": recommendation.__dict__,
         "investigation": investigation,
-
         "evidence": [
-            evidence_item.model_dump()
-            for evidence_item in evidence
+            item.__dict__
+            for item in evidence_chain
         ]
     }

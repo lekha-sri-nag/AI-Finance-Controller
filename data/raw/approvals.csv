@@ -1,0 +1,2 @@
+approval_id,invoice_id,approver_id,approval_date,approval_status,comments
+APR-001,INV-TEST-001,EMP-001,2026-08-29,Approved,Approved by finance manager

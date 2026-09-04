@@ -11,9 +11,14 @@ st.title("💰 AI Finance Controller")
 st.subheader("Financial Risk Dashboard")
 
 API_URL = "http://localhost:8000"
+
+invoice_id = st.session_state.get(
+    "selected_invoice_id",
+    "INV-TEST-001"
+)
 try:
     response = requests.get(
-        f"{API_URL}/invoices/INV-013/investigation",
+        f"{API_URL}/invoices/{invoice_id}/investigation",
         timeout=10
     )
 
