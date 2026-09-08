@@ -2,6 +2,11 @@ import streamlit as st
 import requests
 
 API_URL = "http://127.0.0.1:8000"
+access_token = st.session_state.get("access_token", "")
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {access_token}"
+}
 
 st.set_page_config(
     page_title="Audit Trail - AI Finance Controller",
@@ -36,6 +41,7 @@ if st.button("View Audit Trail"):
 
             investigation_response = requests.get(
                 f"{API_URL}/invoices/{invoice_id}/investigation",
+                headers=AUTH_HEADERS,
                 timeout=10
             )
 
@@ -45,6 +51,7 @@ if st.button("View Audit Trail"):
 
             decision_response = requests.get(
                 f"{API_URL}/decisions/{invoice_id}",
+                headers=AUTH_HEADERS,
                 timeout=10
             )
 
@@ -65,10 +72,14 @@ if st.button("View Audit Trail"):
 
                 if decision_response.status_code == 200:
                     decision_data = decision_response.json()
+
+                if isinstance(decision_data, list):
+                    decisions = decision_data
+                else:
                     decisions = decision_data.get(
-                        "decisions",
-                        []
-                    )
+                    "decisions",
+                    []
+                )
 
                 st.success("Audit data retrieved successfully.")
 

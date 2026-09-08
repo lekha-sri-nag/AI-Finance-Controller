@@ -1,7 +1,9 @@
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
+from app.auth.dependencies import require_roles
+from app.database.models import User
 from app.ingestion.entity_loader import load_entity
 
 
@@ -11,10 +13,24 @@ UPLOAD_DIR = Path("data/uploads")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
+PROCESSING_ROLES = (
+    "admin",
+    "finance_controller",
+)
+
+
 @router.post("/ingestion/invoices")
-async def upload_invoices(file: UploadFile = File(...)):
+async def upload_invoices(
+    file: UploadFile = File(...),
+    current_user: User = Depends(
+        require_roles(*PROCESSING_ROLES)
+    ),
+):
     """
     Upload and validate an invoice CSV or Excel file.
+
+    Only Admin and Finance Controller users can
+    upload invoice data.
     """
 
     if not file.filename:

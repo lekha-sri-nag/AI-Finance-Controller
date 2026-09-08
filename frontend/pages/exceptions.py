@@ -11,6 +11,11 @@ st.title("⚠️ Invoice Exceptions")
 st.subheader("Detected Financial Control Exceptions")
 
 API_URL = "http://127.0.0.1:8000"
+access_token = st.session_state.get("access_token", "")
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {access_token}"
+}
 
 invoice_id = st.session_state.get(
     "selected_invoice_id",
@@ -20,6 +25,7 @@ invoice_id = st.session_state.get(
 try:
     response = requests.get(
         f"{API_URL}/invoices/{invoice_id}/investigation",
+        headers=AUTH_HEADERS,
         timeout=10
     )
 

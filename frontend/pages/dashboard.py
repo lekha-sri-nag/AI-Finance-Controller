@@ -1,5 +1,36 @@
 import streamlit as st
 import requests
+# --------------------------------------------------
+# AUTHENTICATION
+# --------------------------------------------------
+
+access_token = st.session_state.get(
+    "access_token",
+    ""
+)
+
+user_data = st.session_state.get("user") or {}
+
+username = user_data.get(
+    "username",
+    st.session_state.get("username", "Unknown User")
+)
+username = user_data.get(
+    "username",
+    st.session_state.get(
+        "username",
+        "Unknown User"
+    )
+)
+
+user_role = user_data.get(
+    "role",
+    ""
+)
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {access_token}"
+}
 
 st.set_page_config(
     page_title="AI Finance Controller",
@@ -11,14 +42,24 @@ st.title("💰 AI Finance Controller")
 st.subheader("Financial Risk Dashboard")
 
 API_URL = "http://localhost:8000"
+access_token = st.session_state.get("access_token", "")
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {access_token}"
+}
 
 invoice_id = st.session_state.get(
     "selected_invoice_id",
     "INV-TEST-001"
 )
+
+if not invoice_id:
+    invoice_id = "INV-TEST-001"
+st.info(f"Dashboard is requesting invoice: {invoice_id}")
 try:
     response = requests.get(
         f"{API_URL}/invoices/{invoice_id}/investigation",
+        headers=AUTH_HEADERS,
         timeout=10
     )
 
@@ -110,3 +151,40 @@ try:
 except requests.exceptions.RequestException as e:
     st.error("Could not connect to the backend.")
     st.write(str(e))
+# --------------------------------------------------
+# EXCEL REPORT DOWNLOAD
+# --------------------------------------------------
+
+if user_role in {"admin", "finance_controller"}:
+
+    st.divider()
+
+    st.subheader("📊 Financial Analysis Report")
+
+    report_path = (
+        "data/reports/financial_analysis_report.xlsx"
+    )
+
+    try:
+
+        with open(report_path, "rb") as report_file:
+
+            report_data = report_file.read()
+
+        st.download_button(
+            label="📥 Download Excel Report",
+            data=report_data,
+            file_name="financial_analysis_report.xlsx",
+            mime=(
+                "application/vnd.openxmlformats-officedocument."
+                "spreadsheetml.sheet"
+            )
+        )
+
+    except FileNotFoundError:
+
+        st.info(
+            "📄 No Excel report is available yet. "
+            "Process at least one invoice to generate "
+            "the financial analysis report."
+        )

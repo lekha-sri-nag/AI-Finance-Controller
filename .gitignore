@@ -18,3 +18,9 @@ Thumbs.db
 # Local database
 finance_controller.db
 data/uploads/
+
+# Generated reports
+data/reports/
+
+# OCR test files
+data/ingestion_test/

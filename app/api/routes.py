@@ -1,5 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+
+from app.auth.dependencies import require_roles
+from app.database.models import User
 
 from models.invoice import Invoice
 from models.purchase_order import PurchaseOrder
@@ -29,7 +32,12 @@ def test_invoice_endpoint():
 
 
 @router.post("/invoices/process")
-def process_invoice_endpoint(request: InvoiceProcessRequest):
+def process_invoice_endpoint(
+    request: InvoiceProcessRequest,
+    current_user: User = Depends(
+        require_roles("admin", "finance_controller")
+    ),
+):
 
     result = process_invoice(
         invoice=request.invoice,

@@ -15,6 +15,12 @@ st.write(
     "root causes, evidence, and recommended action."
 )
 
+access_token = st.session_state.get("access_token", "")
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {access_token}"
+}
+
 invoice_id = st.text_input(
     "Enter Invoice ID",
     value=st.session_state.get(
@@ -31,6 +37,7 @@ if st.button("Investigate Invoice"):
         try:
             response = requests.get(
                 f"{API_URL}/invoices/{invoice_id}/investigation",
+                headers=AUTH_HEADERS,
                 timeout=10
             )
 

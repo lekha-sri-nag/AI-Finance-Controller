@@ -1,7 +1,9 @@
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from app.auth.dependencies import require_roles
+from app.database.models import User
 from app.services.dynamic_processor import process_invoice_from_data
 
 
@@ -13,13 +15,16 @@ UPLOAD_DIR = Path("data/uploads")
 @router.post("/invoices/{invoice_id}/process-from-data")
 def process_invoice_from_data_endpoint(
     invoice_id: str,
-    file_name: str
+    file_name: str,
+    current_user: User = Depends(
+        require_roles("admin", "finance_controller")
+    )
 ):
     """
     Process an invoice using the uploaded invoice file.
 
-    Related purchase orders, receipts, approvals, policies,
-    and vendors are loaded from the raw financial datasets.
+    Only Admin and Finance Controller users can
+    trigger invoice processing.
     """
 
     file_path = UPLOAD_DIR / file_name
