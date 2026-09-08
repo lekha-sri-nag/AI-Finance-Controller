@@ -8,8 +8,7 @@ st.set_page_config(
 )
 
 
-API_URL = "http://127.0.0.1:8000"
-
+from frontend.config import API_URL
 
 # =========================================================
 # AUTHENTICATION

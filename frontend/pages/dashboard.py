@@ -41,7 +41,7 @@ st.set_page_config(
 st.title("💰 AI Finance Controller")
 st.subheader("Financial Risk Dashboard")
 
-API_URL = "http://localhost:8000"
+from frontend.config import API_URL
 access_token = st.session_state.get("access_token", "")
 
 AUTH_HEADERS = {

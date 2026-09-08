@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "http://127.0.0.1:8000"
+from frontend.config import API_URL
 access_token = st.session_state.get("access_token", "")
 
 AUTH_HEADERS = {

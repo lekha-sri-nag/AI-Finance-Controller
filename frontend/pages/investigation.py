@@ -1,8 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "http://127.0.0.1:8000"
-
+from frontend.config import API_URL
 st.set_page_config(
     page_title="Investigation - AI Finance Controller",
     page_icon="🔎",
