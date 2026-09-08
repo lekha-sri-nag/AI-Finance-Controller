@@ -4,11 +4,11 @@
 
 ## 📌 Overview
 
-AI Finance Controller is an AI-assisted financial control system designed to identify invoice-related exceptions, investigate their root causes, connect each exception to supporting evidence, assess financial risk, and recommend appropriate actions for finance teams.
+AI Finance Controller is an AI-assisted financial control system designed to identify invoice-related exceptions, investigate their root causes, connect findings to supporting evidence, assess financial risk, and recommend appropriate actions for finance teams.
 
-Unlike systems that only flag suspicious transactions, this project focuses on **explaining why an exception occurred and supporting the finance controller's decision with evidence and risk analysis**.
+Unlike systems that only flag suspicious transactions, this project focuses on **understanding why an exception occurred and supporting the finance controller's decision with evidence and risk analysis**.
 
-The system keeps the final financial decision with a human reviewer while maintaining an audit trail of the investigation and decision.
+The system keeps the final financial decision with an authorized human decision-maker while maintaining an auditable history of the investigation and decision.
 
 ---
 
@@ -16,12 +16,12 @@ The system keeps the final financial decision with a human reviewer while mainta
 
 Financial teams often need to verify invoices against multiple sources such as:
 
-* Purchase orders
-* Goods receipts
-* Approval records
-* Financial policies
-* Vendor information
-* Previously processed invoices
+- Purchase orders
+- Goods receipts
+- Approval records
+- Financial policies
+- Vendor information
+- Previously processed invoices
 
 Checking these sources manually can make exception investigation time-consuming and difficult to audit.
 
@@ -29,31 +29,33 @@ The goal of this project is to provide a centralized system that can:
 
 1. Detect financial control exceptions.
 2. Investigate the reasons behind those exceptions.
-3. Build an evidence chain for each finding.
-4. Calculate the financial risk.
-5. Recommend an appropriate action.
-6. Allow a finance reviewer to make the final decision.
-7. Maintain an auditable history of the complete process.
+3. Perform root-cause analysis.
+4. Build an evidence chain for each finding.
+5. Calculate financial risk.
+6. Recommend an appropriate action.
+7. Allow authorized finance personnel to make the final decision.
+8. Maintain an auditable history of the complete process.
 
 ---
 
 ## 💡 What Makes This Project Different?
 
-Traditional invoice-processing systems generally focus on **processing transactions or detecting anomalies**.
+Traditional invoice-processing systems generally focus on **transaction processing, validation, or anomaly detection**.
 
-AI Finance Controller focuses on **investigation and decision support**.
+AI Finance Controller focuses on **investigation, explainability, evidence, risk analysis, and human decision support**.
 
-### Key differences
+### Key Differences
 
-| Existing Approach               | AI Finance Controller                                                       |
-| ------------------------------- | --------------------------------------------------------------------------- |
-| Detects an anomaly or exception | Detects the exception and investigates its root cause                       |
-| Provides an alert               | Connects findings to supporting evidence and risk factors                   |
-| Automated action may be taken   | Recommends an action while keeping the final decision with a human reviewer |
+| Existing Approach | AI Finance Controller |
+|---|---|
+| Detects an anomaly or exception | Detects the exception and investigates its root cause |
+| Provides an alert | Connects findings to supporting evidence and risk factors |
+| May automatically trigger an action | Recommends an action while keeping final authorization with a human |
+| Limited investigation context | Maintains investigation and audit history |
 
-### Core idea
+### Core Idea
 
-**Detect → Investigate → Explain → Assess Risk → Recommend → Human Decision → Audit**
+**Detect → Investigate → Explain → Evidence → Assess Risk → Recommend → Human Decision → Audit**
 
 ---
 
@@ -76,6 +78,7 @@ Investigation
       │
       ├── Root Cause Analysis
       ├── Context Analysis
+      ├── AI Analysis
       └── Evidence Collection
       │
       ▼
@@ -88,11 +91,11 @@ Risk Analysis
 Action Recommendation
       │
       ▼
-Finance Controller
+Authorized Finance User
       │
       ├── Approve
-      ├── Hold
       ├── Reject
+      ├── Hold
       └── Block
       │
       ▼
@@ -101,232 +104,276 @@ Audit Trail
 
 ---
 
-## 🚨 Exception Detection
+## 🔍 Exception Detection
 
-The system currently supports detection of multiple financial control exceptions:
+The system analyzes financial data and identifies different types of control exceptions.
 
-* **Amount Mismatch**
-* **Quantity Mismatch**
-* **Missing Approval**
-* **Policy Violation**
-* **Vendor Anomaly**
-* **Duplicate Invoice**
+Current detection capabilities include:
 
-Each exception contains information such as:
+- Invoice amount mismatch
+- Invoice quantity mismatch
+- Duplicate invoice detection
+- Missing approval detection
+- Policy violation detection
+- Vendor anomaly detection
+- Data validation failures
 
-* Exception ID
-* Invoice ID
-* Exception type
-* Severity
-* Description
-* Detection timestamp
-* Status
+Each detected exception is recorded with relevant information so that it can be investigated further.
 
 ---
 
-## 🔍 Investigation & Root Cause Analysis
+## 🕵️ Investigation & Root Cause Analysis
 
-After detecting exceptions, the system investigates the underlying causes.
+Detection is only the first step.
 
-For example:
+The investigation layer attempts to understand **why the exception occurred** by combining:
 
-**Exception: Amount Mismatch**
+- Invoice information
+- Purchase order information
+- Receipt information
+- Approval information
+- Vendor information
+- Policy information
+- Exception history
+- Contextual financial data
+- AI-assisted analysis
 
-```text
-Invoice Amount = ₹75,000
-Purchase Order = ₹50,000
-```
+The system produces a structured investigation result containing the identified root cause and supporting context.
 
-The investigation identifies the root cause:
+This allows finance teams to move from:
 
-> Invoice amount does not match the approved purchase order.
+> "An exception was detected."
 
-The system can similarly investigate quantity, approval, policy, and vendor-related issues.
+to:
+
+> "The system investigated the exception and identified the likely reason behind it."
 
 ---
 
-## 📑 Evidence Chain
+## 🔗 Evidence Chain
 
-Every identified exception can be connected to supporting evidence.
+The system creates an evidence chain connecting an exception to the information that supports the investigation.
 
-Example:
+Evidence can include:
 
-```text
-Exception
-   │
-   ▼
-Evidence
-   │
-   ├── Source Type
-   ├── Source Reference
-   ├── Description
-   └── Confidence
-```
+- Invoice records
+- Purchase orders
+- Receipts
+- Approval records
+- Policy rules
+- Vendor information
+- Detection results
+- Investigation findings
+- Risk factors
+- Recommendations
 
-Example:
-
-```text
-Exception:
-Amount Mismatch
-
-Evidence:
-Source Type       → Purchase Order
-Source Reference  → PO-013
-Confidence        → 1.0
-```
-
-This makes the investigation explainable and easier to audit.
+The evidence layer improves explainability by allowing finance users to understand **how the system reached its recommendation**.
 
 ---
 
 ## ⚠️ Risk Analysis
 
-The risk engine evaluates detected exceptions and produces:
+The risk engine evaluates the financial impact and severity of identified exceptions.
 
-* Risk score
-* Risk level
-* Risk factors
-* Risk explanation
+Risk assessment considers factors such as:
 
-Supported risk levels:
+- Exception severity
+- Financial amount
+- Number of exceptions
+- Missing approvals
+- Policy violations
+- Duplicate invoice indicators
+- Vendor-related anomalies
+- Investigation findings
 
-```text
-Low
-Medium
-High
-Critical
-```
+The system produces a risk score and corresponding risk level such as:
 
-For example, the test invoice `INV-013` produced:
+- Low
+- Medium
+- High
+- Critical
 
-```text
-Risk Score: 100
-Risk Level: Critical
-Exceptions: 5
-```
+The risk assessment is then used by the recommendation engine.
 
 ---
 
 ## 🤖 Recommendation Engine
 
-Based on the calculated risk level, the system generates an action recommendation.
+Based on the detected exceptions, investigation findings, evidence, and risk assessment, the system recommends an appropriate action.
 
-| Risk Level | Recommended Action | Human Review |
-| ---------- | ------------------ | ------------ |
-| Low        | Approve Payment    | No           |
-| Medium     | Review Invoice     | Yes          |
-| High       | Hold Payment       | Yes          |
-| Critical   | Block Payment      | Yes          |
+Possible recommendations include:
 
-The recommendation is **not treated as the final financial decision**.
+- **Approve**
+- **Hold**
+- **Reject**
+- **Block Payment**
+- **Escalate**
+
+The recommendation is intended to support the finance team rather than replace the final human decision.
 
 ---
 
 ## 👤 Human-in-the-Loop Decision
 
-The finance controller retains control over the final decision.
+The system follows a human-in-the-loop approach.
 
-Supported decisions include:
+AI and rule-based components can:
 
-* Approve
-* Reject
-* Hold
-* Block
+- Detect exceptions
+- Investigate issues
+- Analyze evidence
+- Assess risk
+- Recommend actions
 
-Each decision records:
+However, the final financial decision remains with an authorized finance user.
 
-* Decision ID
-* Invoice ID
-* Recommendation ID
-* Final decision
-* Reviewer
-* Timestamp
-* Comments
+Authorized users can review the investigation and recommendation before making the final decision.
 
-This creates a clear separation between **AI recommendation** and **human authorization**.
+This reduces the risk of blindly relying on automated financial decisions.
 
 ---
 
-## 🧾 Audit Trail
+## 🔐 Role-Based Access Control
 
-The system maintains an audit trail covering:
+The application includes role-based access control to separate responsibilities.
 
-* Detected exceptions
-* Investigation results
-* Root causes
-* Supporting evidence
-* Risk assessment
-* AI recommendation
-* Human decision
-* Reviewer information
-* Decision timestamp
+Current roles include:
 
-This allows the finance team to understand the complete history of an invoice.
+| Role | Access |
+|---|---|
+| Admin | Full system access and user management |
+| Finance Controller | Financial review and final decision authority |
+| Finance Reviewer | View and review financial information |
+| Auditor | Audit and investigation review |
+
+Sensitive operations such as uploading financial data, processing data, and submitting final decisions are restricted based on user permissions.
+
+This provides stronger separation of responsibilities within the financial workflow.
 
 ---
 
-## 🧪 Example Scenario
+## 📄 Document & OCR Ingestion
 
-The system was tested using invoice `INV-013`.
+The system supports financial document ingestion in multiple formats.
 
-### Invoice
+Supported formats include:
+
+- CSV
+- XLSX
+- PDF
+- PNG
+- JPG / JPEG
+- TIFF
+- BMP
+
+For scanned financial documents, the OCR pipeline extracts relevant information such as:
+
+- Invoice number
+- Vendor
+- Purchase order number
+- Invoice date
+- Amount
+- Quantity
+- Currency
+- Status
+
+The OCR pipeline also provides:
+
+- Field-level confidence scores
+- Average extraction confidence
+- Low-confidence field identification
+- Extraction completeness status
+- Manual-review indicators
+- Extracted text
+- Validated invoice information
+
+This allows document-based financial information to enter the same investigation workflow as structured data.
+
+---
+
+## 📊 Excel Reporting
+
+The project includes an Excel reporting layer for human-readable financial analysis and export.
+
+Generated reports can contain:
+
+### Invoice Analysis
+
+Includes information such as:
+
+- Invoice details
+- Exception information
+- Risk score
+- Risk level
+- AI recommendation
+- Processing information
+
+### Human Decisions
+
+Includes:
+
+- Invoice ID
+- AI recommendation
+- Human decision
+- Decision comparison
+- Decision metadata
+
+### Audit Trail
+
+Includes records of important financial processing and decision activities.
+
+SQLite remains the application's primary persistence layer, while Excel acts as a reporting and export format for finance users.
+
+Generated reports are stored under:
 
 ```text
-Invoice ID     : INV-013
-Vendor        : XYZ Traders
-Amount        : ₹75,000
-Quantity      : 100
-Status        : Pending
+data/reports/
 ```
 
-### Purchase Order
+---
 
-```text
-PO Amount      : ₹50,000
-Status         : Approved
-```
+## 🖥️ Streamlit Interface
 
-### Goods Receipt
+The project provides a Streamlit-based frontend for finance users.
 
-```text
-Received Qty   : 80
-```
+### Dashboard
 
-### Vendor
+Provides an overview of:
 
-```text
-Vendor         : XYZ Traders
-Risk Level     : High
-```
+- Processed invoices
+- Financial amounts
+- Exception counts
+- Risk levels
+- Recommended actions
 
-### Detected Exceptions
+### Exceptions
 
-```text
-1. Amount Mismatch
-2. Missing Approval
-3. Quantity Mismatch
-4. Policy Violation
-5. Vendor Anomaly
-```
+Displays detected financial exceptions and their severity.
 
-### Result
+### Investigation
 
-```text
-Risk Score            : 100
-Risk Level            : Critical
-Recommendation        : Block Payment
-Human Review Required : Yes
-Investigation Status  : Completed
-```
+Provides investigation details including:
 
-### Human Decision
+- Invoice information
+- Exceptions
+- Root causes
+- Risk analysis
+- Evidence
+- Recommendation
 
-```text
-Decision               : Block
-Reviewer               : finance_reviewer
-```
+### Decisions
 
-The complete result is then available through the audit trail.
+Allows authorized users to review AI recommendations and submit final financial decisions according to their role permissions.
+
+### Audit Trail
+
+Provides a historical view of:
+
+- Financial processing
+- Investigation results
+- Recommendations
+- Human decisions
+- Audit events
 
 ---
 
@@ -338,15 +385,27 @@ AI-Finance-Controller/
 ├── app/
 │   ├── api/
 │   │   ├── routes.py
+│   │   ├── decision_routes.py
 │   │   ├── exception_routes.py
 │   │   ├── investigation_routes.py
-│   │   └── decision_routes.py
+│   │   ├── ingestion_routes.py
+│   │   ├── dynamic_processing_routes.py
+│   │   └── document_ingestion_routes.py
+│   │
+│   ├── auth/
+│   │   ├── dependencies.py
+│   │   ├── jwt_handler.py
+│   │   ├── routes.py
+│   │   ├── security.py
+│   │   └── user_routes.py
 │   │
 │   ├── audit/
 │   │   ├── audit_logger.py
 │   │   └── audit_service.py
 │   │
-│   ├── controller.py
+│   ├── data/
+│   │   ├── loader.py
+│   │   └── validator.py
 │   │
 │   ├── database/
 │   │   ├── database.py
@@ -358,11 +417,11 @@ AI-Finance-Controller/
 │   │   └── decision_validator.py
 │   │
 │   ├── detection/
-│   │   ├── amount.py
-│   │   ├── quantity.py
+│   │   ├── amount_detector.py
 │   │   ├── duplicate_invoice.py
 │   │   ├── missing_approval.py
-│   │   ├── policy.py
+│   │   ├── policy_detector.py
+│   │   ├── quantity_detector.py
 │   │   └── vendor_anomaly.py
 │   │
 │   ├── evidence/
@@ -370,21 +429,54 @@ AI-Finance-Controller/
 │   │   ├── evidence_chain.py
 │   │   └── evidence_validator.py
 │   │
+│   ├── ingestion/
+│   │   ├── csv_ingestor.py
+│   │   ├── excel_ingestor.py
+│   │   ├── entity_loader.py
+│   │   ├── ocr_extractor.py
+│   │   ├── pdf_extractor.py
+│   │   ├── document_ingestor.py
+│   │   └── invoice_document_parser.py
+│   │
 │   ├── investigation/
-│   │   ├── investigator.py
-│   │   ├── root_cause.py
+│   │   ├── ai_analyzer.py
 │   │   ├── context_builder.py
-│   │   └── ai_analyzer.py
+│   │   ├── investigator.py
+│   │   └── root_cause.py
 │   │
 │   ├── recommendation/
-│   │   ├── recommendation_engine.py
-│   │   └── action_rules.py
+│   │   ├── action_rules.py
+│   │   └── recommendation_engine.py
 │   │
-│   └── risk/
-│       ├── risk_engine.py
-│       └── risk_factors.py
+│   ├── reporting/
+│   │   └── excel_report.py
+│   │
+│   ├── risk/
+│   │   ├── risk_engine.py
+│   │   └── risk_factors.py
+│   │
+│   ├── services/
+│   │   ├── finance_controller.py
+│   │   └── dynamic_processor.py
+│   │
+│   ├── models/
+│   │   └── financial_models.py
+│   │
+│   └── main.py
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   ├── reports/
+│   └── ingestion_test/
 │
 ├── frontend/
+│   ├── components/
+│   │   ├── evidence_panel.py
+│   │   ├── exception_card.py
+│   │   ├── recommendation_panel.py
+│   │   └── risk_indicator.py
+│   │
 │   ├── pages/
 │   │   ├── dashboard.py
 │   │   ├── exceptions.py
@@ -392,242 +484,326 @@ AI-Finance-Controller/
 │   │   ├── decisions.py
 │   │   └── audit_trail.py
 │   │
-│   └── ...
-│
-├── models/
-│   ├── invoice.py
-│   ├── purchase_order.py
-│   ├── receipt.py
-│   ├── approval.py
-│   ├── policy.py
-│   ├── vendor.py
-│   ├── exception.py
-│   ├── evidence.py
-│   ├── risk_result.py
-│   ├── recommendation.py
-│   └── decision.py
+│   └── app.py
 │
 ├── tests/
-│   ├── test_detection.py
-│   ├── test_risk_engine.py
-│   ├── test_recommendation.py
-│   ├── test_investigation.py
-│   ├── test_evidence.py
-│   ├── test_decision.py
-│   └── test_controller.py
 │
-├── data/
-├── docs/
-├── scripts/
-├── requirements.txt
 ├── .env.example
 ├── .gitignore
-├── LICENSE
-└── README.md
+├── README.md
+├── requirements.txt
+└── LICENSE
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
 
 ### Backend
 
-* Python
-* FastAPI
-* Pydantic
-* SQLAlchemy
-* SQLite
+- Python
+- FastAPI
+- Pydantic
+- SQLite
+- JWT authentication
+
+### AI & Analysis
+
+- AI-assisted investigation
+- Rule-based exception detection
+- Root-cause analysis
+- Risk scoring
+- Evidence-based recommendations
+
+### Document Processing
+
+- PDF processing
+- OCR
+- Image processing
+- CSV ingestion
+- Excel ingestion
 
 ### Frontend
 
-* Streamlit
+- Streamlit
+
+### Reporting
+
+- OpenPyXL
+- Excel reporting
 
 ### Testing
 
-* Pytest
+- Pytest
 
 ### Development Environment
 
-* GitHub Codespaces
-* Visual Studio Code
+- GitHub
+- GitHub Codespaces
+- Visual Studio Code
 
 ---
 
 ## 🔌 API Endpoints
 
-### Health Check
+The backend provides APIs for major financial control operations.
 
-```http
-GET /health
+Examples include:
+
+```text
+Authentication
+    ├── Login
+    └── User management
+
+Financial Processing
+    ├── Invoice ingestion
+    ├── Dynamic processing
+    └── Document ingestion
+
+Exception Management
+    ├── Exception retrieval
+    └── Exception analysis
+
+Investigation
+    ├── Investigation results
+    └── Root-cause analysis
+
+Decision Management
+    ├── Decision submission
+    └── Decision history
+
+Audit
+    └── Audit trail
 ```
 
-### Test Invoice API
-
-```http
-GET /invoices/test
-```
-
-### Process Invoice
-
-```http
-POST /invoices/process
-```
-
-### Investigation
-
-```http
-GET /invoices/{invoice_id}/investigation
-```
-
-### Submit Human Decision
-
-```http
-POST /decisions/
-```
-
-### Get Invoice Decisions
-
-```http
-GET /decisions/{invoice_id}
-```
+The FastAPI application exposes interactive API documentation when the backend is running.
 
 ---
 
 ## 🧪 Testing
 
-The project currently includes automated tests covering:
+The project includes automated tests covering major components of the financial control workflow.
 
-* Exception detection
-* Risk calculation
-* Recommendation generation
-* Investigation
-* Evidence validation
-* Human decision creation and validation
-* End-to-end controller processing
-
-Current automated test status:
+Current test suite:
 
 ```text
-24 tests passed
+24 passed
 ```
 
-The application has also been verified through live API requests and the Streamlit frontend.
-
----
-
-## 🚀 Running the Project
-
-### 1. Clone the repository
-
-```bash
-git clone <YOUR-GITHUB-REPOSITORY-URL>
-cd AI-Finance-Controller
-```
-
-### 2. Create and activate a virtual environment
-
-```bash
-python -m venv .venv
-```
-
-Activate it on Linux/macOS:
-
-```bash
-source .venv/bin/activate
-```
-
-On Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Start the FastAPI backend
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 5. Start the Streamlit frontend
-
-In another terminal:
-
-```bash
-streamlit run frontend/app.py --server.port 8501
-```
-
-### 6. Run tests
+Run the tests using:
 
 ```bash
 python -m pytest -v
 ```
 
----
+or:
 
-## 📊 Current Project Status
+```bash
+python -m pytest -q
+```
 
-| Component               | Status       |
-| ----------------------- | ------------ |
-| Invoice validation      | ✅ Complete   |
-| Exception detection     | ✅ Complete   |
-| Risk engine             | ✅ Complete   |
-| Investigation           | ✅ Complete   |
-| Root cause analysis     | ✅ Complete   |
-| Evidence chain          | ✅ Complete   |
-| Recommendation engine   | ✅ Complete   |
-| Human decision          | ✅ Complete   |
-| Database persistence    | ✅ Complete   |
-| Audit trail             | ✅ Complete   |
-| FastAPI backend         | ✅ Working    |
-| Streamlit frontend      | ✅ Working    |
-| Automated tests         | ✅ 24 passing |
-| End-to-end verification | ✅ Complete   |
+The test suite validates functionality across:
 
----
-
-## 🔐 Design Principle
-
-The system follows a **human-in-the-loop financial control model**.
-
-AI is used to:
-
-* Detect
-* Investigate
-* Explain
-* Assess
-* Recommend
-
-The finance controller remains responsible for the **final financial decision**.
-
-This approach is designed to improve transparency, accountability, and auditability rather than completely replacing human financial control.
+- Data validation
+- Exception detection
+- Investigation
+- Evidence generation
+- Risk analysis
+- Recommendations
+- Decisions
+- Authentication
+- Document ingestion
+- OCR processing
+- Reporting
+- API behavior
 
 ---
 
-## 📌 Future Enhancements
+## 🚀 Running the Project in GitHub Codespaces
 
-Potential future improvements include:
+### 1. Clone the Repository
 
-* Real invoice document ingestion
-* OCR-based invoice extraction
-* Advanced anomaly detection models
-* More sophisticated vendor risk scoring
-* LLM-powered investigation summaries
-* Role-based authentication
-* Advanced audit analytics
-* Production database support
-* Cloud deployment
-* Automated notification workflows
+```bash
+git clone https://github.com/lekha-sri-nag/AI-Finance-Controller.git
+cd AI-Finance-Controller
+```
+
+### 2. Create a Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+### 3. Activate the Virtual Environment
+
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Run Tests
+
+```bash
+python -m pytest -v
+```
+
+### 6. Start the FastAPI Backend
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+The backend will be available through the Codespaces forwarded port.
+
+### 7. Start the Streamlit Frontend
+
+Open a second terminal and activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Then run:
+
+```bash
+streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8501
+```
+
+Open the forwarded Streamlit port to access the application.
 
 ---
 
-## 👩‍💻 Project
+## 📌 Example Scenario
 
-**AI Finance Controller**
+Consider an invoice:
 
-An evidence-driven financial exception investigation and human decision support system.
+```text
+Invoice ID: INV-TEST-001
+Invoice Amount: ₹25,000
+Risk Score: 90
+Risk Level: Critical
+Exceptions: 3
+Recommended Action: Block Payment
+```
+
+The system does not stop at detecting the exceptions.
+
+It:
+
+1. Identifies the financial exceptions.
+2. Investigates the invoice context.
+3. Determines likely root causes.
+4. Builds an evidence chain.
+5. Calculates the financial risk.
+6. Generates a recommendation.
+7. Presents the recommendation to an authorized finance user.
+8. Records the final human decision.
+9. Maintains the complete audit history.
+
+This demonstrates the project's core principle:
+
+**The system supports the financial controller's decision rather than blindly making the decision.**
+
+---
+
+## 🔐 Security & Governance
+
+The system incorporates several controls intended for financial workflows:
+
+- JWT-based authentication
+- Role-based authorization
+- Restricted financial operations
+- Human approval for final decisions
+- Evidence-backed recommendations
+- Audit trail
+- Decision history
+- Separation of reviewer and decision-maker responsibilities
+
+The architecture is designed around the principle that automated analysis should remain **explainable, reviewable, and auditable**.
+
+---
+
+## 📈 Current Project Status
+
+### Implemented
+
+- [x] Financial data ingestion
+- [x] Data validation
+- [x] Invoice exception detection
+- [x] Amount mismatch detection
+- [x] Quantity mismatch detection
+- [x] Duplicate invoice detection
+- [x] Missing approval detection
+- [x] Policy violation detection
+- [x] Vendor anomaly detection
+- [x] Investigation engine
+- [x] Root-cause analysis
+- [x] AI-assisted analysis
+- [x] Evidence chain generation
+- [x] Risk scoring
+- [x] Risk classification
+- [x] Action recommendation
+- [x] Human-in-the-loop decisions
+- [x] Decision validation
+- [x] Decision history
+- [x] JWT authentication
+- [x] Role-based access control
+- [x] CSV ingestion
+- [x] Excel ingestion
+- [x] PDF document ingestion
+- [x] OCR-based invoice extraction
+- [x] OCR confidence analysis
+- [x] Manual-review indicators
+- [x] SQLite persistence
+- [x] Audit trail
+- [x] Streamlit dashboard
+- [x] Exception interface
+- [x] Investigation interface
+- [x] Decision interface
+- [x] Audit interface
+- [x] Excel financial reporting
+- [x] Automated testing
+
+---
+
+## 🔮 Future Enhancements
+
+Possible future improvements include:
+
+- Integration with enterprise ERP systems
+- Advanced machine-learning-based anomaly detection
+- More sophisticated vendor risk modeling
+- Additional financial document formats
+- Advanced analytics dashboards
+- Multi-organization deployment
+- Cloud-native production deployment
+- Integration with enterprise identity providers
+- Enhanced explainability and model monitoring
+
+---
+
+## 📂 Data & Privacy
+
+The project uses sample and test financial data for development and demonstration purposes.
+
+Sensitive production financial information should not be committed to the repository.
+
+The project excludes generated reports, local databases, environment files, uploaded documents, and other runtime artifacts where appropriate through `.gitignore`.
+
+
+---
+
+## 👩‍💻 Author
+
+**Vutukuri Lekha Sri Nag**
+
+AI Finance Controller — Evidence-driven financial exception investigation and human decision support system.
+
+GitHub:
+
+https://github.com/lekha-sri-nag/AI-Finance-Controller
