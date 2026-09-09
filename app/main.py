@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 
 from app.auth.user_routes import router as user_router
@@ -9,10 +10,41 @@ from app.auth.routes import router as auth_router
 from app.api.document_ingestion_routes import router as document_ingestion_router
 from app.api.dynamic_processing_routes import router as dynamic_processing_router
 
-from app.database.database import Base, engine
-
+from app.database.database import Base, engine, SessionLocal
+from app.database.models import User
+from app.auth.security import hash_password
 
 Base.metadata.create_all(bind=engine)
+def create_initial_admin():
+    username = os.getenv("INITIAL_ADMIN_USERNAME")
+    password = os.getenv("INITIAL_ADMIN_PASSWORD")
+
+    if not username or not password:
+        return
+
+    db = SessionLocal()
+
+    try:
+        existing_user = db.query(User).first()
+
+        if existing_user:
+            return
+
+        admin = User(
+            username=username,
+            password_hash=hash_password(password),
+            role="admin",
+            is_active=True
+        )
+
+        db.add(admin)
+        db.commit()
+
+    finally:
+        db.close()
+
+
+create_initial_admin()
 
 
 app = FastAPI(
