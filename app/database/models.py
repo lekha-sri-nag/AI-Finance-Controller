@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, DateTime, Text, Boolean
+import uuid
 from app.database.database import Base
 
 
@@ -17,7 +18,7 @@ class DecisionRecord(Base):
 class User(Base):
     __tablename__ = "users"
 
-    user_id = Column(String, primary_key=True)
+    user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
     role = Column(String, nullable=False)
