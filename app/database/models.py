@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, DateTime, Text, Boolean
 import uuid
 from app.database.database import Base
+from datetime import datetime
 
 
 class DecisionRecord(Base):
@@ -23,4 +24,4 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     role = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
