@@ -10,7 +10,8 @@ from app.database.models import User
 from app.database.repositories import (
     save_decision,
     get_decisions_by_invoice,
-    save_audit_record
+    save_audit_record,
+    get_audit_records_by_entity
 )
 from app.decision.human_decision import create_decision
 from app.reporting.excel_report import create_excel_report
@@ -102,3 +103,16 @@ def get_invoice_decisions(
     )
 
     return decisions
+@router.get("/{invoice_id}/audit")
+def get_invoice_audit(
+    invoice_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    audit_records = get_audit_records_by_entity(
+        db,
+        "Invoice",
+        invoice_id
+    )
+
+    return audit_records
