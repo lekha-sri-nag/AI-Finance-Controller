@@ -55,6 +55,16 @@ if st.button("View Audit Trail"):
                 timeout=10
             )
 
+            # ---------------------------------------------------------
+            # GET PERSISTENT AUDIT RECORDS
+            # ---------------------------------------------------------
+
+            audit_response = requests.get(
+                f"{API_URL}/decisions/{invoice_id}/audit",
+                headers=AUTH_HEADERS,
+                timeout=10
+            )
+
             if investigation_response.status_code == 200:
 
                 data = investigation_response.json()
@@ -69,17 +79,24 @@ if st.button("View Audit Trail"):
                 # If the endpoint is unavailable, the rest of
                 # the audit trail can still be displayed.
                 decisions = []
+                audit_records = []
 
                 if decision_response.status_code == 200:
                     decision_data = decision_response.json()
 
-                if isinstance(decision_data, list):
-                    decisions = decision_data
-                else:
-                    decisions = decision_data.get(
-                    "decisions",
-                    []
-                )
+                    if isinstance(decision_data, list):
+                        decisions = decision_data
+                    else:
+                        decisions = decision_data.get(
+                            "decisions",
+                            []
+                        )
+
+                if audit_response.status_code == 200:
+                    audit_data = audit_response.json()
+
+                    if isinstance(audit_data, list):
+                        audit_records = audit_data
 
                 st.success("Audit data retrieved successfully.")
 
@@ -503,7 +520,94 @@ if st.button("View Audit Trail"):
                 st.divider()
 
                 # =====================================================
-                # 8. FINAL AUDIT CONCLUSION
+                # 8. PERSISTED AUDIT RECORDS
+                # =====================================================
+
+                st.subheader("Persisted Audit Records")
+
+                if audit_records:
+
+                    st.success(
+                        f"{len(audit_records)} persistent audit "
+                        "record(s) retrieved from the database."
+                    )
+
+                    for index, record in enumerate(
+                        audit_records,
+                        start=1
+                    ):
+
+                        with st.container(border=True):
+
+                            st.write(
+                                f"### Audit Record #{index}"
+                            )
+
+                            col1, col2, col3 = st.columns(3)
+
+                            with col1:
+                                st.write(
+                                    "**Action:**",
+                                    record.get(
+                                        "action",
+                                        "N/A"
+                                    )
+                                )
+
+                            with col2:
+                                st.write(
+                                    "**Performed By:**",
+                                    record.get(
+                                        "performed_by",
+                                        "N/A"
+                                    )
+                                )
+
+                            with col3:
+                                st.write(
+                                    "**Audit ID:**",
+                                    record.get(
+                                        "audit_id",
+                                        "N/A"
+                                    )
+                                )
+
+                            st.write(
+                                "**Entity:**",
+                                f"{record.get('entity_type', 'N/A')} / "
+                                f"{record.get('entity_id', 'N/A')}"
+                            )
+
+                            st.write(
+                                "**Performed At:**",
+                                record.get(
+                                    "performed_at",
+                                    "N/A"
+                                )
+                            )
+
+                            st.write(
+                                "**Details:**"
+                            )
+
+                            st.info(
+                                record.get(
+                                    "details",
+                                    "No details available."
+                                )
+                            )
+
+                else:
+
+                    st.info(
+                        "No persistent audit records have been "
+                        "recorded for this invoice."
+                    )
+
+                st.divider()
+
+                # =====================================================
+                # 9. FINAL AUDIT CONCLUSION
                 # =====================================================
 
                 st.subheader(
@@ -518,7 +622,7 @@ if st.button("View Audit Trail"):
                 )
 
                 # =====================================================
-                # 9. HUMAN REVIEW STATUS
+                # 10. HUMAN REVIEW STATUS
                 # =====================================================
 
                 st.subheader(

@@ -24,9 +24,13 @@ def login_user(username, password):
         response = requests.post(
             f"{API_URL}/auth/login",
             data={
-                "username": username,
-                "password": password
-            },
+    		"grant_type": "password",
+    		"username": username,
+    		"password": password,
+    		"scope": "",
+    		"client_id": "string",
+    		"client_secret": ""
+		},
             timeout=10
         )
 
