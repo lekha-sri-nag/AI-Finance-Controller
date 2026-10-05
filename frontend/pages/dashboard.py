@@ -152,6 +152,8 @@ except requests.exceptions.RequestException as e:
     st.error("Could not connect to the backend.")
     st.write(str(e))
 # --------------------------------------------------
+
+# --------------------------------------------------
 # EXCEL REPORT DOWNLOAD
 # --------------------------------------------------
 
@@ -159,32 +161,51 @@ if user_role in {"admin", "finance_controller"}:
 
     st.divider()
 
-    st.subheader("📊 Financial Analysis Report")
-
-    report_path = (
-        "data/reports/financial_analysis_report.xlsx"
-    )
+    st.subheader("?? Financial Analysis Report")
 
     try:
 
-        with open(report_path, "rb") as report_file:
-
-            report_data = report_file.read()
-
-        st.download_button(
-            label="📥 Download Excel Report",
-            data=report_data,
-            file_name="financial_analysis_report.xlsx",
-            mime=(
-                "application/vnd.openxmlformats-officedocument."
-                "spreadsheetml.sheet"
-            )
+        report_response = requests.get(
+            f"{API_URL}/decisions/report/excel",
+            headers=AUTH_HEADERS,
+            timeout=30
         )
 
-    except FileNotFoundError:
+        if report_response.status_code == 200:
 
-        st.info(
-            "📄 No Excel report is available yet. "
-            "Process at least one invoice to generate "
-            "the financial analysis report."
+            st.download_button(
+                label="Download Excel Report",
+                data=report_response.content,
+                file_name="financial_analysis_report.xlsx",
+                mime=(
+                    "application/vnd.openxmlformats-officedocument"
+                    ".spreadsheetml.sheet"
+                )
+            )
+
+        elif report_response.status_code == 404:
+
+            st.info(
+                "No Excel report is available yet. "
+                "Process at least one invoice to generate "
+                "the financial analysis report."
+            )
+
+        elif report_response.status_code == 401:
+
+            st.error(
+                "Your session has expired. Please log in again."
+            )
+
+        else:
+
+            st.error(
+                f"Could not retrieve Excel report. "
+                f"Backend returned {report_response.status_code}"
+            )
+
+    except requests.exceptions.RequestException as e:
+
+        st.error(
+            f"Could not download Excel report: {e}"
         )
