@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="AI Finance Controller",
@@ -97,6 +98,48 @@ if not st.session_state["access_token"]:
             "Login",
             use_container_width=True
         )
+
+    components.html(
+        """
+        <script>
+        const parentDoc = window.parent.document;
+
+        if (!parentDoc.__financeLoginHandler) {
+            parentDoc.__financeLoginHandler = true;
+
+            parentDoc.addEventListener("keydown", function(event) {
+
+                if (event.key !== "Enter") {
+                    return;
+                }
+
+                const target = event.target;
+
+                if (
+                    target &&
+                    target.matches('input[aria-label="Username"]')
+                ) {
+                    const passwordInput = parentDoc.querySelector(
+                        'input[aria-label="Password"]'
+                    );
+
+                    if (passwordInput) {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        setTimeout(function() {
+                            passwordInput.focus();
+                        }, 0);
+                    }
+                }
+
+            }, true);
+        }
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
 
     if login_button:
 
