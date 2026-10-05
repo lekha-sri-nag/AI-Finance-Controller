@@ -710,3 +710,56 @@ if data:
         st.error(
             f"Could not retrieve decision history: {e}"
         )
+# --------------------------------------------------
+# EXCEL REPORT DOWNLOAD
+# --------------------------------------------------
+
+st.divider()
+
+st.subheader("?? Financial Analysis Report")
+
+try:
+
+    report_response = requests.get(
+        f"{API_URL}/decisions/report/excel",
+        headers=AUTH_HEADERS,
+        timeout=30
+    )
+
+    if report_response.status_code == 200:
+
+        st.download_button(
+            label="Download Excel Report",
+            data=report_response.content,
+            file_name="financial_analysis_report.xlsx",
+            mime=(
+                "application/vnd.openxmlformats-officedocument"
+                ".spreadsheetml.sheet"
+            )
+        )
+
+    elif report_response.status_code == 404:
+
+        st.info(
+            "Excel report is not available yet. "
+            "Submit a human decision first to generate it."
+        )
+
+    elif report_response.status_code == 401:
+
+        st.error(
+            "?? Your session has expired. Please log in again."
+        )
+
+    else:
+
+        st.error(
+            f"Could not retrieve Excel report. "
+            f"Backend returned {report_response.status_code}"
+        )
+
+except requests.exceptions.RequestException as e:
+
+    st.error(
+        f"Could not download Excel report: {e}"
+    )

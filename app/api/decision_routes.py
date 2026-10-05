@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import FileResponse
+from pathlib import Path
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -89,6 +91,29 @@ def submit_decision(
             status_code=400,
             detail=str(exc)
         )
+
+@router.get("/report/excel")
+def download_excel_report(
+    current_user: User = Depends(get_current_user)
+):
+    report_file = Path(
+        "data/reports/financial_analysis_report.xlsx"
+    )
+
+    if not report_file.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Excel report not found."
+        )
+
+    return FileResponse(
+        path=report_file,
+        filename="financial_analysis_report.xlsx",
+        media_type=(
+            "application/vnd.openxmlformats-officedocument"
+            ".spreadsheetml.sheet"
+        )
+    )
 
 
 @router.get("/{invoice_id}")
