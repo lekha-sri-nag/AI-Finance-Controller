@@ -28,7 +28,6 @@ AUTH_HEADERS = {
 
 st.set_page_config(
     page_title="AI Finance Controller",
-    page_icon="ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¼",
     layout="wide"
 )
 
@@ -152,8 +151,7 @@ st.markdown(
 
 st.markdown(
     '<div class="subtitle">'
-    'Financial Risk Dashboard ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· AI-assisted financial control and investigation'
-    '</div>',
+    'Financial Risk Dashboard - AI-assisted financial control and investigation',
     unsafe_allow_html=True
 )
 

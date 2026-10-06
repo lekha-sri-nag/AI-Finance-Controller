@@ -643,11 +643,6 @@ if decision_data:
                 "This invoice requires human review before payment."
             )
 
-            st.markdown(
-                '<div class="review-panel">',
-                unsafe_allow_html=True
-            )
-
             with st.form("human_review_form"):
 
                 decision = st.radio(
@@ -670,9 +665,6 @@ if decision_data:
                 submit_decision = st.form_submit_button(
                     "Submit Review Decision"
                 )
-
-            st.markdown("</div>", unsafe_allow_html=True)
-
 
             # =================================================
             # SUBMIT HUMAN DECISION

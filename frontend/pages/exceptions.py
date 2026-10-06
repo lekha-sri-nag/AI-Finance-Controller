@@ -232,37 +232,21 @@ try:
 
                 with st.container():
                     st.markdown(
-                        f"""
-                        <div class="exception-card">
-                            <div class="exception-title">
-                                {i}. {exception_type}
-                            </div>
-
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
-
-                                <div>
-                                    <div class="exception-label">Severity</div>
-                                    <div class="exception-value">{severity}</div>
-                                </div>
-
-                                <div>
-                                    <div class="exception-label">Status</div>
-                                    <div class="exception-value">{status}</div>
-                                </div>
-
-                                <div>
-                                    <div class="exception-label">Exception ID</div>
-                                    <div class="exception-value">{exception_id}</div>
-                                </div>
-
-                            </div>
-
-                            <div class="description-box">
-                                <div class="exception-label">Description</div>
-                                <div style="margin-top:0.35rem;">{description}</div>
-                            </div>
-                        </div>
-                        """,
+                        f'<div class="exception-card">'
+                        f'<div class="exception-title">{i}. {exception_type}</div>'
+                        f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">'
+                        f'<div><div class="exception-label">Severity</div>'
+                        f'<div class="exception-value">{severity}</div></div>'
+                        f'<div><div class="exception-label">Status</div>'
+                        f'<div class="exception-value">{status}</div></div>'
+                        f'<div><div class="exception-label">Exception ID</div>'
+                        f'<div class="exception-value">{exception_id}</div></div>'
+                        f'</div>'
+                        f'<div class="description-box">'
+                        f'<div class="exception-label">Description</div>'
+                        f'<div style="margin-top:0.35rem;">{description}</div>'
+                        f'</div>'
+                        f'</div>',
                         unsafe_allow_html=True
                     )
 
