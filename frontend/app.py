@@ -76,12 +76,120 @@ if "user" not in st.session_state:
 
 if not st.session_state["access_token"]:
 
-    st.title("💰 AI Finance Controller")
-    st.subheader("Secure Financial Control System")
+    st.markdown(
+        '''
+        <style>
+        .login-shell {
+            max-width: 980px;
+            margin: 55px auto 20px auto;
+            padding: 0 24px;
+        }
 
-    st.divider()
+        .brand-panel {
+            background: linear-gradient(135deg, #172554 0%, #312e81 55%, #4f46e5 100%);
+            border-radius: 24px;
+            padding: 42px 46px;
+            color: white;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+            margin-bottom: 28px;
+        }
 
-    st.markdown("### 🔐 Login")
+        .brand-kicker {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.82;
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-size: 2.35rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin: 0;
+        }
+
+        .brand-subtitle {
+            font-size: 1.02rem;
+            line-height: 1.6;
+            opacity: 0.88;
+            margin: 14px 0 0 0;
+            max-width: 680px;
+        }
+
+        .login-heading {
+            font-size: 1.45rem;
+            font-weight: 750;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+        }
+
+        .login-description {
+            color: #64748b;
+            font-size: 0.94rem;
+            margin: 0 0 22px 0;
+        }
+
+        .security-strip {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px auto;
+            max-width: 980px;
+            padding: 0 24px;
+        }
+
+        .security-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 9px 13px;
+            color: #475569;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        div[data-testid="stForm"] {
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 30px 36px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+        }
+
+        div[data-testid="stTextInput"] label {
+            font-weight: 650;
+            color: #334155;
+        }
+
+        div[data-testid="stFormSubmitButton"] button {
+            min-height: 48px;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+            color: white;
+        }
+        </style>
+
+        <div class="login-shell">
+            <div class="brand-panel">
+                <div class="brand-kicker">Enterprise Finance Operations</div>
+                <div class="brand-title">AI Finance Controller</div>
+                <p class="brand-subtitle">
+                    Intelligent financial control, risk analysis, investigation,
+                    and human decision governance in one secure platform.
+                </p>
+            </div>
+
+            <div class="login-heading">Secure Sign In</div>
+            <div class="login-description">
+                Sign in to access the financial control workspace.
+            </div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
 
     with st.form("login_form"):
 
@@ -98,6 +206,17 @@ if not st.session_state["access_token"]:
             "Login",
             use_container_width=True
         )
+
+    st.markdown(
+        '''
+        <div class="security-strip">
+            <div class="security-item">Role-based access</div>
+            <div class="security-item">Financial audit controls</div>
+            <div class="security-item">Secure authentication</div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
 
     components.html(
         """
@@ -1042,15 +1161,25 @@ if "processed_result" in st.session_state:
     # AI RECOMMENDATION
     # -----------------------------------------------------
 
-    st.subheader(
-        "🤖 AI Recommendation"
+    st.markdown(
+        '<div class="result-panel">'
+        '<div class="result-panel-title">AI Recommendation</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="result-panel-text">'
+        'The AI recommendation is based on the completed investigation, '
+        'risk assessment, detected exceptions, and control evidence.'
+        '</div>',
+        unsafe_allow_html=True
     )
 
     if recommendation["action"] == "Block Payment":
 
         st.error(
             f"""
-### 🔴 {recommendation["action"]}
+**{recommendation["action"]}**
 
 **Priority:** {recommendation["priority"]}
 
@@ -1064,7 +1193,7 @@ if "processed_result" in st.session_state:
 
         st.warning(
             f"""
-### 🟠 {recommendation["action"]}
+**{recommendation["action"]}**
 
 **Priority:** {recommendation["priority"]}
 
@@ -1076,7 +1205,7 @@ if "processed_result" in st.session_state:
 
         st.success(
             f"""
-### 🟢 {recommendation["action"]}
+**{recommendation["action"]}**
 
 **Priority:** {recommendation["priority"]}
 
@@ -1084,21 +1213,34 @@ if "processed_result" in st.session_state:
 """
         )
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
     # -----------------------------------------------------
     # RISK FACTORS
     # -----------------------------------------------------
 
-    st.subheader(
-        "📌 Risk Factors"
+    st.markdown(
+        '<div class="result-panel">'
+        '<div class="result-panel-title">Risk Factors</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="result-panel-text">'
+        'Key factors contributing to the calculated financial risk score.'
+        '</div>',
+        unsafe_allow_html=True
     )
 
     for factor in risk["risk_factors"]:
 
-        st.write(
-            f"• {factor}"
+        st.markdown(
+            f'<div class="exception-card">{factor}</div>',
+            unsafe_allow_html=True
         )
 
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.divider()
 
@@ -1199,7 +1341,10 @@ if current_user["role"] == "admin":
     # CREATE USER
     # -----------------------------------------------------
 
-    st.subheader("➕ Create New User")
+    st.markdown(
+        '<div class="result-panel-title">Create New User</div>',
+        unsafe_allow_html=True
+    )
 
     with st.form("create_user_form"):
 

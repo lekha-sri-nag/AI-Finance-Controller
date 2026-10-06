@@ -1,25 +1,179 @@
-import streamlit as st
+﻿import streamlit as st
 import requests
 
 from frontend.config import API_URL
+
+st.set_page_config(
+    page_title="Audit Trail - AI Finance Controller",
+    layout="wide"
+)
+
+# =========================================================
+# PROFESSIONAL AUDIT TRAIL UI
+# =========================================================
+
+st.markdown(
+    """
+    <style>
+
+    .main-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.15rem;
+    }
+
+    .subtitle {
+        color: #64748b;
+        font-size: 1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .search-panel {
+        padding: 1.35rem;
+        border-radius: 16px;
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 750;
+        color: #1e293b;
+        margin-top: 2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .metric-card {
+        padding: 1.2rem;
+        border-radius: 15px;
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+        min-height: 112px;
+    }
+
+    .metric-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 650;
+        text-transform: uppercase;
+        letter-spacing: 0.035em;
+    }
+
+    .metric-value {
+        font-size: 1.45rem;
+        color: #1e293b;
+        font-weight: 800;
+        margin-top: 0.3rem;
+        word-break: break-word;
+    }
+
+    .event-card {
+        padding: 1.2rem 1.3rem;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+        margin-bottom: 1rem;
+    }
+
+    .event-title {
+        font-size: 1.05rem;
+        font-weight: 750;
+        color: #1e293b;
+        margin-bottom: 0.45rem;
+    }
+
+    .event-description {
+        color: #475569;
+        line-height: 1.55;
+    }
+
+    .record-card {
+        padding: 1.3rem;
+        border-radius: 15px;
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+        margin-bottom: 1rem;
+    }
+
+    .record-title {
+        font-size: 1.05rem;
+        font-weight: 750;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+
+    .record-label {
+        font-size: 0.76rem;
+        color: #64748b;
+        font-weight: 650;
+        text-transform: uppercase;
+        letter-spacing: 0.035em;
+    }
+
+    .record-value {
+        color: #1e293b;
+        font-weight: 650;
+        margin-top: 0.2rem;
+    }
+
+    .info-box {
+        padding: 1rem;
+        border-radius: 11px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        line-height: 1.6;
+        margin-top: 0.8rem;
+    }
+
+    .conclusion-panel {
+        padding: 1.25rem;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+        border: 1px solid #c7d2fe;
+        color: #312e81;
+        line-height: 1.65;
+        margin-bottom: 1.2rem;
+    }
+
+    .timeline-line {
+        border-left: 3px solid #c7d2fe;
+        padding-left: 1rem;
+        margin-left: 0.4rem;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="main-title">Audit Trail</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="subtitle">Review the complete financial control history of an invoice, from detection and investigation through recommendation and human decision.</div>',
+    unsafe_allow_html=True
+)
+
 access_token = st.session_state.get("access_token", "")
 
 AUTH_HEADERS = {
     "Authorization": f"Bearer {access_token}"
 }
 
-st.set_page_config(
-    page_title="Audit Trail - AI Finance Controller",
-    page_icon="📜",
-    layout="wide"
-)
-
-st.title("📜 Audit Trail")
-
-st.write(
-    "Review the complete financial control history of an invoice, "
-    "including exceptions, risk assessment, AI decisions, "
-    "investigation results, and human review decisions."
+st.markdown(
+    '<div class="search-panel">',
+    unsafe_allow_html=True
 )
 
 invoice_id = st.text_input(
@@ -27,7 +181,17 @@ invoice_id = st.text_input(
     value="INV-TEST-001"
 )
 
-if st.button("View Audit Trail"):
+view_audit = st.button(
+    "View Audit Trail",
+    use_container_width=False
+)
+
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
+)
+
+if view_audit:
 
     if not invoice_id:
         st.warning("Please enter an Invoice ID.")
@@ -75,9 +239,6 @@ if st.button("View Audit Trail"):
                 investigation = data.get("investigation", {})
                 exceptions = data.get("exceptions", [])
 
-                # Decision history is optional.
-                # If the endpoint is unavailable, the rest of
-                # the audit trail can still be displayed.
                 decisions = []
                 audit_records = []
 
@@ -104,54 +265,79 @@ if st.button("View Audit Trail"):
                 # 1. INVOICE INFORMATION
                 # =====================================================
 
-                st.subheader("🧾 Invoice Information")
+                st.markdown(
+                    '<div class="section-title">Invoice Information</div>',
+                    unsafe_allow_html=True
+                )
 
                 col1, col2, col3, col4 = st.columns(4)
 
                 with col1:
-                    st.metric(
-                        "Invoice ID",
-                        invoice.get(
-                            "invoice_id",
-                            "N/A"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Invoice ID</div>
+                            <div class="metric-value">
+                                {invoice.get("invoice_id", "N/A")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col2:
-                    st.metric(
-                        "Vendor",
-                        invoice.get(
-                            "vendor_id",
-                            "N/A"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Vendor</div>
+                            <div class="metric-value">
+                                {invoice.get("vendor_id", "N/A")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col3:
-                    st.metric(
-                        "Amount",
-                        f"₹{invoice.get('amount', 0):,.0f}"
+                    amount = invoice.get("amount", 0) or 0
+
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Amount</div>
+                            <div class="metric-value">
+                                &#8377;{amount:,.0f}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col4:
-                    st.metric(
-                        "Status",
-                        invoice.get(
-                            "status",
-                            "N/A"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Status</div>
+                            <div class="metric-value">
+                                {invoice.get("status", "N/A")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
-
-                st.divider()
 
                 # =====================================================
                 # 2. AUDIT EVENTS
                 # =====================================================
 
-                st.subheader("🔍 Audit Events")
+                st.markdown(
+                    '<div class="section-title">Audit Events</div>',
+                    unsafe_allow_html=True
+                )
 
                 events = [
                     (
-                        "📥 Invoice Received",
+                        "Invoice Received",
                         (
                             f"Invoice "
                             f"{invoice.get('invoice_id', 'N/A')} "
@@ -159,14 +345,14 @@ if st.button("View Audit Trail"):
                         )
                     ),
                     (
-                        "⚠️ Exceptions Detected",
+                        "Exceptions Detected",
                         (
                             f"{len(exceptions)} financial control "
                             "exception(s) were detected."
                         )
                     ),
                     (
-                        "🔴 Risk Assessment",
+                        "Risk Assessment",
                         (
                             f"Risk score calculated as "
                             f"{risk.get('risk_score', 0)} "
@@ -174,21 +360,21 @@ if st.button("View Audit Trail"):
                         )
                     ),
                     (
-                        "🤖 Root Cause Investigation",
+                        "Root Cause Investigation",
                         investigation.get(
                             "conclusion",
                             "Investigation completed."
                         )
                     ),
                     (
-                        "💳 Payment Decision",
+                        "Payment Decision",
                         (
                             f"Recommended action: "
                             f"{recommendation.get('action', 'N/A')}."
                         )
                     ),
                     (
-                        "👤 Human Review",
+                        "Human Review",
                         (
                             "Human review is required."
                             if recommendation.get(
@@ -203,40 +389,55 @@ if st.button("View Audit Trail"):
 
                 for event_name, description in events:
 
-                    with st.container(border=True):
-
-                        st.write(
-                            f"### {event_name}"
-                        )
-
-                        st.write(description)
-
-                st.divider()
+                    st.markdown(
+                        f"""
+                        <div class="event-card">
+                            <div class="event-title">
+                                {event_name}
+                            </div>
+                            <div class="event-description">
+                                {description}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
                 # =====================================================
                 # 3. RISK ASSESSMENT
                 # =====================================================
 
-                st.subheader("🔴 Risk Assessment")
+                st.markdown(
+                    '<div class="section-title">Risk Assessment</div>',
+                    unsafe_allow_html=True
+                )
 
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    st.metric(
-                        "Risk Score",
-                        risk.get(
-                            "risk_score",
-                            0
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Risk Score</div>
+                            <div class="metric-value">
+                                {risk.get("risk_score", 0)}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col2:
-                    st.metric(
-                        "Risk Level",
-                        risk.get(
-                            "risk_level",
-                            "Unknown"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Risk Level</div>
+                            <div class="metric-value">
+                                {risk.get("risk_level", "Unknown")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 risk_factors = risk.get(
@@ -246,54 +447,77 @@ if st.button("View Audit Trail"):
 
                 if risk_factors:
 
-                    st.write("### Risk Factors")
+                    st.markdown(
+                        '<div class="section-title">Risk Factors</div>',
+                        unsafe_allow_html=True
+                    )
 
                     for factor in risk_factors:
-                        st.write(
-                            f"• {factor}"
+                        st.markdown(
+                            f"- {factor}"
                         )
-
-                st.divider()
 
                 # =====================================================
                 # 4. EXCEPTION HISTORY
                 # =====================================================
 
-                st.subheader("⚠️ Exception History")
+                st.markdown(
+                    '<div class="section-title">Exception History</div>',
+                    unsafe_allow_html=True
+                )
 
                 if exceptions:
 
                     for exception in exceptions:
 
-                        with st.container(border=True):
+                        exception_type = exception.get(
+                            "exception_type",
+                            "Unknown"
+                        )
 
-                            st.write(
-                                f"### "
-                                f"{exception.get(
-                                    'exception_type',
-                                    'Unknown'
-                                )}"
-                            )
+                        severity = exception.get(
+                            "severity",
+                            "Unknown"
+                        )
 
-                            st.caption(
-                                f"Severity: "
-                                f"{exception.get(
-                                    'severity',
-                                    'Unknown'
-                                )} | "
-                                f"Status: "
-                                f"{exception.get(
-                                    'status',
-                                    'Unknown'
-                                )}"
-                            )
+                        status = exception.get(
+                            "status",
+                            "Unknown"
+                        )
 
-                            st.write(
-                                exception.get(
-                                    "description",
-                                    "No description available."
-                                )
-                            )
+                        description = exception.get(
+                            "description",
+                            "No description available."
+                        )
+
+                        st.markdown(
+                            f"""
+                            <div class="record-card">
+                                <div class="record-title">
+                                    {exception_type}
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+
+                                    <div>
+                                        <div class="record-label">Severity</div>
+                                        <div class="record-value">{severity}</div>
+                                    </div>
+
+                                    <div>
+                                        <div class="record-label">Status</div>
+                                        <div class="record-value">{status}</div>
+                                    </div>
+
+                                </div>
+
+                                <div class="info-box">
+                                    {description}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
 
                 else:
 
@@ -301,46 +525,64 @@ if st.button("View Audit Trail"):
                         "No exceptions recorded."
                     )
 
-                st.divider()
-
                 # =====================================================
                 # 5. AI RECOMMENDATION
                 # =====================================================
 
-                st.subheader("🤖 AI Recommendation")
+                st.markdown(
+                    '<div class="section-title">AI Recommendation</div>',
+                    unsafe_allow_html=True
+                )
 
                 col1, col2, col3 = st.columns(3)
 
                 with col1:
-                    st.metric(
-                        "Recommended Action",
-                        recommendation.get(
-                            "action",
-                            "N/A"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Recommended Action</div>
+                            <div class="metric-value">
+                                {recommendation.get("action", "N/A")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col2:
-                    st.metric(
-                        "Priority",
-                        recommendation.get(
-                            "priority",
-                            "Unknown"
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Priority</div>
+                            <div class="metric-value">
+                                {recommendation.get("priority", "Unknown")}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 with col3:
-                    st.metric(
-                        "Human Review",
-                        (
-                            "Required"
-                            if recommendation.get(
-                                "requires_human_review",
-                                False
-                            )
-                            else
-                            "Not Required"
+                    human_review_text = (
+                        "Required"
+                        if recommendation.get(
+                            "requires_human_review",
+                            False
                         )
+                        else
+                        "Not Required"
+                    )
+
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+                            <div class="metric-label">Human Review</div>
+                            <div class="metric-value">
+                                {human_review_text}
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 st.info(
@@ -350,14 +592,13 @@ if st.button("View Audit Trail"):
                     )
                 )
 
-                st.divider()
-
                 # =====================================================
                 # 6. ROOT CAUSE INVESTIGATION
                 # =====================================================
 
-                st.subheader(
-                    "🧠 AI Root Cause Investigation"
+                st.markdown(
+                    '<div class="section-title">AI Root Cause Investigation</div>',
+                    unsafe_allow_html=True
                 )
 
                 if investigation:
@@ -365,30 +606,42 @@ if st.button("View Audit Trail"):
                     col1, col2, col3 = st.columns(3)
 
                     with col1:
-                        st.metric(
-                            "Exceptions",
-                            investigation.get(
-                                "exceptions_count",
-                                0
-                            )
+                        st.markdown(
+                            f"""
+                            <div class="metric-card">
+                                <div class="metric-label">Exceptions</div>
+                                <div class="metric-value">
+                                    {investigation.get("exceptions_count", 0)}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
                         )
 
                     with col2:
-                        st.metric(
-                            "High-Risk Exceptions",
-                            investigation.get(
-                                "high_risk_exceptions",
-                                0
-                            )
+                        st.markdown(
+                            f"""
+                            <div class="metric-card">
+                                <div class="metric-label">High-Risk Exceptions</div>
+                                <div class="metric-value">
+                                    {investigation.get("high_risk_exceptions", 0)}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
                         )
 
                     with col3:
-                        st.metric(
-                            "Risk Level",
-                            investigation.get(
-                                "risk_level",
-                                "Unknown"
-                            )
+                        st.markdown(
+                            f"""
+                            <div class="metric-card">
+                                <div class="metric-label">Risk Level</div>
+                                <div class="metric-value">
+                                    {investigation.get("risk_level", "Unknown")}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
                         )
 
                     root_causes = investigation.get(
@@ -398,39 +651,46 @@ if st.button("View Audit Trail"):
 
                     if root_causes:
 
-                        st.write("### Root Causes")
+                        st.markdown(
+                            '<div class="section-title">Root Causes</div>',
+                            unsafe_allow_html=True
+                        )
 
                         for cause in root_causes:
-                            st.write(
-                                f"• {cause}"
+                            st.markdown(
+                                f"- {cause}"
                             )
 
-                    st.write(
-                        "### Investigation Conclusion"
+                    st.markdown(
+                        '<div class="section-title">Investigation Conclusion</div>',
+                        unsafe_allow_html=True
                     )
 
-                    st.info(
-                        investigation.get(
-                            "conclusion",
-                            "No conclusion available."
-                        )
+                    st.markdown(
+                        f"""
+                        <div class="conclusion-panel">
+                            {investigation.get(
+                                "conclusion",
+                                "No conclusion available."
+                            )}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
-
-                st.divider()
 
                 # =====================================================
                 # 7. HUMAN DECISION HISTORY
                 # =====================================================
 
-                st.subheader(
-                    "👤 Human Decision History"
+                st.markdown(
+                    '<div class="section-title">Human Decision History</div>',
+                    unsafe_allow_html=True
                 )
 
                 if decisions:
 
                     st.success(
-                        f"{len(decisions)} human decision(s) "
-                        "recorded for this invoice."
+                        f"{len(decisions)} human decision(s) recorded for this invoice."
                     )
 
                     for index, decision in enumerate(
@@ -438,98 +698,83 @@ if st.button("View Audit Trail"):
                         start=1
                     ):
 
-                        with st.container(border=True):
+                        st.markdown(
+                            f"""
+                            <div class="record-card">
+                                <div class="record-title">
+                                    Decision #{index}
+                                </div>
 
-                            st.write(
-                                f"### Decision #{index}"
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+
+                                    <div>
+                                        <div class="record-label">Decision</div>
+                                        <div class="record-value">
+                                            {decision.get("decision", "N/A")}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="record-label">Reviewer</div>
+                                        <div class="record-value">
+                                            {decision.get("decided_by", "N/A")}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="record-label">Decision ID</div>
+                                        <div class="record-value">
+                                            {decision.get("decision_id", "N/A")}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="info-box">
+                                    <strong>Recommendation ID:</strong>
+                                    {decision.get("recommendation_id", "N/A")}
+                                    <br><br>
+                                    <strong>Decision Time:</strong>
+                                    {decision.get("decided_at", "N/A")}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+
+                        comments = decision.get(
+                            "comments",
+                            ""
+                        )
+
+                        if comments:
+                            st.info(
+                                comments
                             )
-
-                            col1, col2, col3 = st.columns(3)
-
-                            with col1:
-                                st.metric(
-                                    "Decision",
-                                    decision.get(
-                                        "decision",
-                                        "N/A"
-                                    )
-                                )
-
-                            with col2:
-                                st.metric(
-                                    "Reviewer",
-                                    decision.get(
-                                        "decided_by",
-                                        "N/A"
-                                    )
-                                )
-
-                            with col3:
-                                st.metric(
-                                    "Decision ID",
-                                    decision.get(
-                                        "decision_id",
-                                        "N/A"
-                                    )
-                                )
-
-                            st.write(
-                                "**Recommendation ID:**",
-                                decision.get(
-                                    "recommendation_id",
-                                    "N/A"
-                                )
+                        else:
+                            st.caption(
+                                "No reviewer comments provided."
                             )
-
-                            st.write(
-                                "**Decision Time:**",
-                                decision.get(
-                                    "decided_at",
-                                    "N/A"
-                                )
-                            )
-
-                            st.write(
-                                "**Reviewer Comments:**"
-                            )
-
-                            comments = decision.get(
-                                "comments",
-                                ""
-                            )
-
-                            if comments:
-
-                                st.info(
-                                    comments
-                                )
-
-                            else:
-
-                                st.caption(
-                                    "No reviewer comments provided."
-                                )
 
                 else:
 
                     st.info(
-                        "No human decisions have been recorded "
-                        "for this invoice."
+                        "No human decisions have been recorded for this invoice."
                     )
-
-                st.divider()
 
                 # =====================================================
                 # 8. PERSISTED AUDIT RECORDS
                 # =====================================================
 
-                st.subheader("Persisted Audit Records")
+                st.markdown(
+                    '<div class="section-title">Persisted Audit Records</div>',
+                    unsafe_allow_html=True
+                )
 
                 if audit_records:
 
                     st.success(
-                        f"{len(audit_records)} persistent audit "
-                        "record(s) retrieved from the database."
+                        f"{len(audit_records)} persistent audit record(s) retrieved from the database."
                     )
 
                     for index, record in enumerate(
@@ -537,96 +782,90 @@ if st.button("View Audit Trail"):
                         start=1
                     ):
 
-                        with st.container(border=True):
+                        st.markdown(
+                            f"""
+                            <div class="record-card">
+                                <div class="record-title">
+                                    Audit Record #{index}
+                                </div>
 
-                            st.write(
-                                f"### Audit Record #{index}"
-                            )
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
 
-                            col1, col2, col3 = st.columns(3)
+                                    <div>
+                                        <div class="record-label">Action</div>
+                                        <div class="record-value">
+                                            {record.get("action", "N/A")}
+                                        </div>
+                                    </div>
 
-                            with col1:
-                                st.write(
-                                    "**Action:**",
-                                    record.get(
-                                        "action",
-                                        "N/A"
-                                    )
-                                )
+                                    <div>
+                                        <div class="record-label">Performed By</div>
+                                        <div class="record-value">
+                                            {record.get("performed_by", "N/A")}
+                                        </div>
+                                    </div>
 
-                            with col2:
-                                st.write(
-                                    "**Performed By:**",
-                                    record.get(
-                                        "performed_by",
-                                        "N/A"
-                                    )
-                                )
+                                    <div>
+                                        <div class="record-label">Audit ID</div>
+                                        <div class="record-value">
+                                            {record.get("audit_id", "N/A")}
+                                        </div>
+                                    </div>
 
-                            with col3:
-                                st.write(
-                                    "**Audit ID:**",
-                                    record.get(
-                                        "audit_id",
-                                        "N/A"
-                                    )
-                                )
+                                </div>
 
-                            st.write(
-                                "**Entity:**",
-                                f"{record.get('entity_type', 'N/A')} / "
-                                f"{record.get('entity_id', 'N/A')}"
-                            )
+                                <div class="info-box">
+                                    <strong>Entity:</strong>
+                                    {record.get("entity_type", "N/A")} /
+                                    {record.get("entity_id", "N/A")}
+                                    <br><br>
 
-                            st.write(
-                                "**Performed At:**",
-                                record.get(
-                                    "performed_at",
-                                    "N/A"
-                                )
-                            )
+                                    <strong>Performed At:</strong>
+                                    {record.get("performed_at", "N/A")}
+                                    <br><br>
 
-                            st.write(
-                                "**Details:**"
-                            )
-
-                            st.info(
-                                record.get(
-                                    "details",
-                                    "No details available."
-                                )
-                            )
+                                    <strong>Details:</strong><br>
+                                    {record.get("details", "No details available.")}
+                                </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
 
                 else:
 
                     st.info(
-                        "No persistent audit records have been "
-                        "recorded for this invoice."
+                        "No persistent audit records have been recorded for this invoice."
                     )
-
-                st.divider()
 
                 # =====================================================
                 # 9. FINAL AUDIT CONCLUSION
                 # =====================================================
 
-                st.subheader(
-                    "🧠 Final Audit Conclusion"
+                st.markdown(
+                    '<div class="section-title">Final Audit Conclusion</div>',
+                    unsafe_allow_html=True
                 )
 
-                st.info(
-                    investigation.get(
-                        "conclusion",
-                        "No audit conclusion available."
-                    )
+                st.markdown(
+                    f"""
+                    <div class="conclusion-panel">
+                        {investigation.get(
+                            "conclusion",
+                            "No audit conclusion available."
+                        )}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
                 # =====================================================
                 # 10. HUMAN REVIEW STATUS
                 # =====================================================
 
-                st.subheader(
-                    "👤 Human Review Status"
+                st.markdown(
+                    '<div class="section-title">Human Review Status</div>',
+                    unsafe_allow_html=True
                 )
 
                 human_review_required = recommendation.get(
@@ -683,12 +922,5 @@ if st.button("View Audit Trail"):
         except requests.exceptions.ConnectionError:
 
             st.error(
-                "❌ Backend API is not running. "
-                "Please make sure FastAPI is running on port 8000."
-            )
-
-        except Exception as e:
-
-            st.error(
-                f"❌ Unexpected error: {e}"
+                "Could not connect to the backend."
             )
