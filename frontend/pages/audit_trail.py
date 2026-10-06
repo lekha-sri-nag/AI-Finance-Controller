@@ -17,137 +17,164 @@ st.markdown(
     <style>
 
     .main-title {
-        font-size: 2.5rem;
-        font-weight: 800;
+        font-size: 2.65rem;
+        font-weight: 850;
         background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 0.15rem;
+        margin-bottom: 0.2rem;
+        letter-spacing: -0.03em;
     }
 
     .subtitle {
         color: #64748b;
         font-size: 1rem;
-        margin-bottom: 1.8rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
     }
 
     .search-panel {
-        padding: 1.35rem;
-        border-radius: 16px;
-        background: linear-gradient(145deg, #ffffff, #f8fafc);
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 55%, #fdf2f8 100%);
+        border: 1px solid #c7d2fe;
+        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.10);
+        margin-bottom: 1.8rem;
     }
 
     .section-title {
-        font-size: 1.4rem;
-        font-weight: 750;
-        color: #1e293b;
-        margin-top: 2rem;
-        margin-bottom: 1.2rem;
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #172554;
+        margin-top: 2.2rem;
+        margin-bottom: 1.15rem;
+        padding-left: 0.8rem;
+        border-left: 5px solid #6366f1;
+        line-height: 1.25;
     }
 
     .metric-card {
-        padding: 1.2rem;
-        border-radius: 15px;
-        background: linear-gradient(145deg, #ffffff, #f8fafc);
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
-        min-height: 112px;
+        padding: 1.3rem;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #dbe4f0;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+        min-height: 118px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(79, 70, 229, 0.12);
     }
 
     .metric-label {
-        font-size: 0.8rem;
-        color: #64748b;
-        font-weight: 650;
+        font-size: 0.76rem;
+        color: #6366f1;
+        font-weight: 750;
         text-transform: uppercase;
-        letter-spacing: 0.035em;
+        letter-spacing: 0.055em;
     }
 
     .metric-value {
-        font-size: 1.45rem;
-        color: #1e293b;
-        font-weight: 800;
-        margin-top: 0.3rem;
+        font-size: 1.48rem;
+        color: #172554;
+        font-weight: 850;
+        margin-top: 0.35rem;
         word-break: break-word;
     }
 
     .event-card {
-        padding: 1.2rem 1.3rem;
-        border-radius: 14px;
-        background: linear-gradient(145deg, #ffffff, #f8fafc);
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+        padding: 1.25rem 1.4rem;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #dbe4f0;
+        border-left: 5px solid #6366f1;
+        box-shadow: 0 7px 20px rgba(15, 23, 42, 0.06);
         margin-bottom: 1rem;
     }
 
     .event-title {
-        font-size: 1.05rem;
-        font-weight: 750;
-        color: #1e293b;
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: #312e81;
         margin-bottom: 0.45rem;
     }
 
     .event-description {
         color: #475569;
-        line-height: 1.55;
+        line-height: 1.6;
     }
 
     .record-card {
-        padding: 1.3rem;
-        border-radius: 15px;
-        background: linear-gradient(145deg, #ffffff, #f8fafc);
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+        padding: 1.35rem;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #dbe4f0;
+        box-shadow: 0 7px 20px rgba(15, 23, 42, 0.06);
         margin-bottom: 1rem;
     }
 
     .record-title {
-        font-size: 1.05rem;
-        font-weight: 750;
-        color: #1e293b;
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: #312e81;
         margin-bottom: 1rem;
     }
 
     .record-label {
-        font-size: 0.76rem;
-        color: #64748b;
-        font-weight: 650;
+        font-size: 0.74rem;
+        color: #6366f1;
+        font-weight: 750;
         text-transform: uppercase;
-        letter-spacing: 0.035em;
+        letter-spacing: 0.05em;
     }
 
     .record-value {
-        color: #1e293b;
-        font-weight: 650;
-        margin-top: 0.2rem;
+        color: #172554;
+        font-weight: 700;
+        margin-top: 0.25rem;
     }
 
     .info-box {
-        padding: 1rem;
-        border-radius: 11px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        padding: 1rem 1.1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+        border: 1px solid #c7d2fe;
         color: #334155;
-        line-height: 1.6;
-        margin-top: 0.8rem;
+        line-height: 1.65;
+        margin-top: 0.9rem;
     }
 
     .conclusion-panel {
-        padding: 1.25rem;
-        border-radius: 15px;
-        background: linear-gradient(135deg, #eff6ff, #f5f3ff);
-        border: 1px solid #c7d2fe;
+        padding: 1.45rem;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 52%, #fce7f3 100%);
+        border: 1px solid #c4b5fd;
         color: #312e81;
-        line-height: 1.65;
-        margin-bottom: 1.2rem;
+        line-height: 1.7;
+        margin-bottom: 1.3rem;
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
     }
 
     .timeline-line {
-        border-left: 3px solid #c7d2fe;
-        padding-left: 1rem;
+        border-left: 4px solid #818cf8;
+        padding-left: 1.1rem;
         margin-left: 0.4rem;
+    }
+
+    div[data-testid="stTextInput"] input {
+        border-radius: 11px;
+        min-height: 44px;
+        border: 1px solid #c7d2fe;
+    }
+
+    div[data-testid="stButton"] button {
+        border-radius: 11px;
+        min-height: 44px;
+        font-weight: 750;
+        border: 1px solid #4f46e5;
+        box-shadow: 0 7px 18px rgba(79, 70, 229, 0.18);
     }
 
     </style>
@@ -171,11 +198,6 @@ AUTH_HEADERS = {
     "Authorization": f"Bearer {access_token}"
 }
 
-st.markdown(
-    '<div class="search-panel">',
-    unsafe_allow_html=True
-)
-
 invoice_id = st.text_input(
     "Enter Invoice ID",
     value="INV-TEST-001"
@@ -184,11 +206,6 @@ invoice_id = st.text_input(
 view_audit = st.button(
     "View Audit Trail",
     use_container_width=False
-)
-
-st.markdown(
-    '</div>',
-    unsafe_allow_html=True
 )
 
 if view_audit:
@@ -490,32 +507,29 @@ if view_audit:
                             "No description available."
                         )
 
+                        exception_html = (
+                            '<div class="record-card">'
+                            '<div class="record-title">'
+                            f'{exception_type}'
+                            '</div>'
+                            '<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">'
+                            '<div>'
+                            '<div class="record-label">Severity</div>'
+                            f'<div class="record-value">{severity}</div>'
+                            '</div>'
+                            '<div>'
+                            '<div class="record-label">Status</div>'
+                            f'<div class="record-value">{status}</div>'
+                            '</div>'
+                            '</div>'
+                            '<div class="info-box">'
+                            f'{description}'
+                            '</div>'
+                            '</div>'
+                        )
+
                         st.markdown(
-                            f"""
-                            <div class="record-card">
-                                <div class="record-title">
-                                    {exception_type}
-                                </div>
-
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-
-                                    <div>
-                                        <div class="record-label">Severity</div>
-                                        <div class="record-value">{severity}</div>
-                                    </div>
-
-                                    <div>
-                                        <div class="record-label">Status</div>
-                                        <div class="record-value">{status}</div>
-                                    </div>
-
-                                </div>
-
-                                <div class="info-box">
-                                    {description}
-                                </div>
-                            </div>
-                            """,
+                            exception_html,
                             unsafe_allow_html=True
                         )
 

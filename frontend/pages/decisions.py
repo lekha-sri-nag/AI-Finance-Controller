@@ -239,11 +239,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-    '<div class="search-panel">',
-    unsafe_allow_html=True
-)
-
 invoice_id = st.text_input(
     "Invoice ID",
     value=st.session_state.get(
@@ -257,7 +252,6 @@ review_clicked = st.button(
     use_container_width=False
 )
 
-st.markdown("</div>", unsafe_allow_html=True)
 
 
 # =========================================================

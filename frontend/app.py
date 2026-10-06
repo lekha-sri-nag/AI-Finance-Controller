@@ -9,7 +9,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="AI Finance Controller",
-    page_icon="💰",
+    page_icon="",
     layout="wide"
 )
 
@@ -170,6 +170,33 @@ if not st.session_state["access_token"]:
             background: linear-gradient(90deg, #4f46e5, #6366f1);
             color: white;
         }
+
+        /* Login form cleanup */
+        div[data-testid="InputInstructions"] {
+            display: none !important;
+        }
+
+        div[data-testid="stForm"] {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #dbe3f0;
+            border-radius: 22px;
+            padding: 34px 38px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+        }
+
+        div[data-testid="stTextInput"] input {
+            border-radius: 10px;
+            min-height: 44px;
+        }
+
+        div[data-testid="stFormSubmitButton"] button {
+            min-height: 50px;
+            border-radius: 11px;
+            font-size: 1rem;
+            font-weight: 750;
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.20);
+        }
+
         </style>
 
         <div class="login-shell">
@@ -182,10 +209,6 @@ if not st.session_state["access_token"]:
                 </p>
             </div>
 
-            <div class="login-heading">Secure Sign In</div>
-            <div class="login-description">
-                Sign in to access the financial control workspace.
-            </div>
         </div>
         ''',
         unsafe_allow_html=True
@@ -294,7 +317,7 @@ if not st.session_state["access_token"]:
             else:
 
                 st.error(
-                    "❌ Invalid username or password."
+                    "Incorrect username or password. Please check your credentials and try again."
                 )
 
     st.stop()
