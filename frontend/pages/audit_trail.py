@@ -737,22 +737,6 @@ if view_audit:
                             "Human review has been recorded."
                         )
 
-                        st.write(
-                            f"**Latest Decision:** "
-                            f"{latest_decision.get(
-                                'decision',
-                                'N/A'
-                            )}"
-                        )
-
-                        st.write(
-                            f"**Reviewed By:** "
-                            f"{latest_decision.get(
-                                'decided_by',
-                                'N/A'
-                            )}"
-                        )
-
                     else:
 
                         st.error(
