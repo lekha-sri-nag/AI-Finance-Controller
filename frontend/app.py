@@ -673,6 +673,9 @@ if user_role in PROCESSING_ROLES:
                         )
 
                         average_confidence = result.get(
+                            "ocr_analysis",
+                            {}
+                        ).get(
                             "average_confidence"
                         )
 

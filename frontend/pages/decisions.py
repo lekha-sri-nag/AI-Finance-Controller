@@ -340,7 +340,7 @@ if decision_data:
     )
 
     risk = decision_data.get(
-        "risk",
+        "risk_result",
         {}
     )
 
@@ -411,8 +411,7 @@ if decision_data:
             f"""
             <div class="metric-card">
                 <div class="metric-label">Vendor</div>
-                <div class="metric-value">{invoice.get("vendor_name", invoice.get("vendor", "N/A"))}</div>
-            </div>
+                <div class="metric-value">{decision_data.get("vendor", {}).get("vendor_name", "N/A")}</div>            </div>
             """,
             unsafe_allow_html=True
         )
@@ -732,10 +731,7 @@ if decision_data:
                                     )
                                 )
 
-                                st.markdown(
-                                    "</div>",
-                                    unsafe_allow_html=True
-                                )
+    
 
                             else:
 
@@ -878,10 +874,7 @@ if decision_data:
                         "Unknown"
                     )
 
-                    st.markdown(
-                        '<div class="history-card">',
-                        unsafe_allow_html=True
-                    )
+                    
 
                     st.markdown(
                         f'<div class="history-title">'
