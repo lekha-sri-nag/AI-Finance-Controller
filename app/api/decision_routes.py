@@ -84,7 +84,15 @@ def submit_decision(
             decisions=[decision]
         )
 
-        return saved_decision
+        return {
+            "decision_id": saved_decision.decision_id,
+            "invoice_id": saved_decision.invoice_id,
+            "recommendation_id": saved_decision.recommendation_id,
+            "decision": saved_decision.decision,
+            "decided_by": saved_decision.decided_by,
+            "decided_at": saved_decision.decided_at,
+            "comments": saved_decision.comments
+        }
 
     except ValueError as exc:
         raise HTTPException(

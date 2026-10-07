@@ -339,6 +339,77 @@ PROCESSING_ROLES = [
 
 
 # =========================================================
+# MAIN RESULT PANEL STYLING
+# =========================================================
+
+st.markdown(
+    """
+    <style>
+
+    .result-panel {
+        padding: 1.35rem 1.45rem;
+        border: 1px solid #dbe4f0;
+        border-radius: 16px;
+        background: linear-gradient(145deg, #ffffff, #f7f9fc);
+        margin: 1rem 0 1.25rem 0;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+
+    .result-panel-title {
+        color: #1e293b;
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 0.35rem;
+    }
+
+    .result-panel-text {
+        color: #64748b;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-card {
+        padding: 1.1rem 1.2rem;
+        border-radius: 12px;
+        border: 1px solid #c7d7fe;
+        background: linear-gradient(135deg, #eef4ff, #f7f5ff);
+        margin-top: 0.75rem;
+    }
+
+    .recommendation-action {
+        color: #3730a3;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 0.65rem;
+    }
+
+    .recommendation-detail {
+        color: #475467;
+        line-height: 1.6;
+        margin: 0.25rem 0;
+    }
+
+    .risk-factor-card {
+        padding: 0.95rem 1.1rem;
+        border-radius: 11px;
+        border-left: 4px solid #6366f1;
+        border-top: 1px solid #e0e7ff;
+        border-right: 1px solid #e0e7ff;
+        border-bottom: 1px solid #e0e7ff;
+        background: #f8faff;
+        color: #344054;
+        line-height: 1.5;
+        margin-bottom: 0.65rem;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
 # HEADER
 # =========================================================
 
@@ -1198,43 +1269,29 @@ if "processed_result" in st.session_state:
         unsafe_allow_html=True
     )
 
-    if recommendation["action"] == "Block Payment":
-
-        st.error(
-            f"""
-**{recommendation["action"]}**
-
-**Priority:** {recommendation["priority"]}
-
-**Reason:** {recommendation["reason"]}
-
-**Human Review:** Required
-"""
-        )
-
-    elif recommendation["action"] == "Hold Payment":
-
-        st.warning(
-            f"""
-**{recommendation["action"]}**
-
-**Priority:** {recommendation["priority"]}
-
-**Reason:** {recommendation["reason"]}
-"""
-        )
-
-    else:
-
-        st.success(
-            f"""
-**{recommendation["action"]}**
-
-**Priority:** {recommendation["priority"]}
-
-**Reason:** {recommendation["reason"]}
-"""
-        )
+    st.markdown(
+        f"""
+        <div class="recommendation-card">
+            <div class="recommendation-action">
+                {recommendation["action"]}
+            </div>
+            <div class="recommendation-detail">
+                <strong>Priority:</strong>
+                {recommendation["priority"]}
+            </div>
+            <div class="recommendation-detail">
+                <strong>Reason:</strong>
+                {recommendation["reason"]}
+            </div>
+            {
+                '<div class="recommendation-detail"><strong>Human Review:</strong> Required</div>'
+                if recommendation["action"] == "Block Payment"
+                else ''
+            }
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1259,7 +1316,7 @@ if "processed_result" in st.session_state:
     for factor in risk["risk_factors"]:
 
         st.markdown(
-            f'<div class="exception-card">{factor}</div>',
+            f'<div class="risk-factor-card">{factor}</div>',
             unsafe_allow_html=True
         )
 

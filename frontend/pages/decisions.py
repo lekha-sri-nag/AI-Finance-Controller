@@ -359,10 +359,7 @@ if decision_data:
         {}
     )
 
-    human_review = decision_data.get(
-        "human_review",
-        False
-    )
+    human_review = True
 
 
     # =====================================================
@@ -695,11 +692,7 @@ if decision_data:
 
                         if isinstance(result, dict):
 
-                            saved = result.get(
-                                "decision",
-                                result
-                            )
-
+                            saved = result
                             if isinstance(saved, dict):
 
                                 st.markdown(
