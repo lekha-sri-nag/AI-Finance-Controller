@@ -13,6 +13,8 @@ elif os.name == "nt":
 
     if os.path.exists(windows_tesseract):
         pytesseract.pytesseract.tesseract_cmd = windows_tesseract
+elif os.path.exists("/usr/bin/tesseract"):
+    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 from PIL import Image, ImageEnhance, ImageOps
 
 
