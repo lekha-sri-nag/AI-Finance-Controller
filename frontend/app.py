@@ -25,14 +25,10 @@ def login_user(username, password):
         response = requests.post(
             f"{API_URL}/auth/login",
             data={
-    		"grant_type": "password",
-    		"username": username,
-    		"password": password,
-    		"scope": "",
-    		"client_id": "string",
-    		"client_secret": ""
-		},
-            timeout=10
+                "username": username.strip(),
+                "password": password,
+            },
+            timeout=10,
         )
 
         if response.status_code == 200:
