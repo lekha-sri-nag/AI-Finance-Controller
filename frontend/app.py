@@ -28,15 +28,20 @@ def login_user(username, password):
                 "username": username.strip(),
                 "password": password,
             },
-            timeout=10,
+            timeout=20,
         )
 
         if response.status_code == 200:
             return response.json()
 
+        st.error(
+            f"Login failed: HTTP {response.status_code} - "
+            f"{response.text[:300]}"
+        )
         return None
 
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        st.error(f"Login request failed: {e}")
         return None
 
 
