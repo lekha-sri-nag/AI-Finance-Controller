@@ -694,10 +694,6 @@ if decision_data:
                             saved = result
                             if isinstance(saved, dict):
 
-                                st.markdown(
-                                    '<div class="decision-success">',
-                                    unsafe_allow_html=True
-                                )
 
                                 st.write(
                                     "**Decision ID:**",
